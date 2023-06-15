@@ -11,6 +11,5 @@ app = FastAPI()
 # While building an API, the "path" is the main way to separate "concerns" and "resources".
 #The @app.get("/") tells FastAPI that the function right below is in charge of handling requests that go to: the path "/" using a get operation
 @app.get("/") # This path operation decorator tells FastAPI that the function below corresponds to the path "/"" with an operation get.
-async def root():
-    return {"message": "Hello World"}
-print("test")
+async def root(): # 4) define the path operation function
+    return {"message": "Hello World"} 
