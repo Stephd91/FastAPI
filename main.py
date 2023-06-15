@@ -13,4 +13,4 @@ app = FastAPI()
 @app.get("/") # This path operation decorator tells FastAPI that the function below corresponds to the path "/"" with an operation get.
 async def root():
     return {"message": "Hello World"}
-
+print("test")
