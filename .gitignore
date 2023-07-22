@@ -1,1 +1,6 @@
 env
+__pycache__
+node_modules
+app/config_psycopg2.py
+app/config_sqlalchemy.py
+test.py

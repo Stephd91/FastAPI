@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anki Card app</title>
+    <!-- Add Bootstrap CSS link here (You can download Bootstrap or use a CDN) -->
+    <linkl rel="stylesheet" href="~/FastAPI/app/node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">{{ card.theme }}</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Question:</h6>
+                <p class="card-text">{{ card.question }}</p>
+            </div>
+            <div class="card-footer">
+                <h6 class="card-subtitle mb-2 text-muted">Answer:</h6>
+                <p class="card-text">{{ card.answer }}</p>
+            </div>
+        </div>
+    </div>
+    <script src="~/FastAPI/app/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

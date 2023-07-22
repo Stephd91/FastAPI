@@ -1,0 +1,77 @@
+﻿Theme;Question;Answer
+Data Engineering Intro;What is Data Engineering?;Data Engineering involves designing, building, and maintaining data pipelines and systems.
+Data Engineering Intro;Name the primary goal of Data Engineering.;The primary goal is to ensure data availability, reliability, and accessibility for analysis.
+Data Engineering Intro;What are ETL pipelines?;ETL stands for Extract, Transform, and Load.
+Data Engineering Intro;Explain the concept of Data Warehousing.;Data Warehousing is the process of collecting, storing, and managing structured data.
+Data Engineering Intro;What is the difference between OLTP and OLAP?;OLTP deals with real-time transactions, while OLAP focuses on complex analytical queries.
+Data Engineering Intro;Name some popular Data Warehousing technologies.;Amazon Redshift, Google BigQuery, Snowflake, Microsoft Azure Synapse Analytics.
+Data Engineering Intro;What is the role of Big Data technologies in Data Engineering?;Big Data technologies process large volumes of data for scalable data solutions.
+Data Engineering Intro;Define Data Modeling in Data Engineering.;Data Modeling creates a logical representation of data and its relationships.
+Data Engineering Intro;What is the significance of Data Quality in Data Engineering?;Data Quality ensures accurate, consistent, and error-free data for analysis.
+Data Engineering Intro;What is Data Governance?;Data Governance defines policies and processes for managing data assets in an organization.
+Programming;Write a Python code snippet to read a CSV file using pandas.;import pandas as pd <br> df = pd.read_csv('filename.csv')
+Programming;How do you handle missing values in pandas DataFrame?;Use methods like fillna(), dropna(), or interpolate() in pandas.
+Programming;Write a Python function to find the factorial of a number using recursion.;def factorial(n): if n == 0: return 1 else: return n * factorial(n-1)
+Programming;How do you remove duplicates from a Python list?;Use list(set(your_list)) to remove duplicates from a Python list.
+Programming;Write a Python code snippet to connect to a MySQL database using mysql-connector-python.;"import mysql.connector conn = mysql.connector.connect( host=""hostname"", user=""username"", password=""password"", database=""database_name"" )"
+Programming;How do you sort a pandas DataFrame based on a specific column in descending order?;df.sort_values(by='column_name', ascending=False)
+Distributed Systems;What is Apache Hadoop used for in Data Engineering?;Hadoop is used for distributed storage and processing of large datasets across clusters.
+Distributed Systems;Name two components of Apache Hadoop ecosystem for distributed data processing.;Hadoop MapReduce, Apache Spark.
+Distributed Systems;What are the advantages of using Apache Spark over Hadoop MapReduce?;Spark offers faster in-memory data processing and real-time streaming capabilities.
+Distributed Systems;Explain the concept of data partitioning in Apache Spark.;Data partitioning divides data into smaller partitions for parallel processing in Spark.
+Distributed Systems;What is Amazon S3 used for?;Amazon S3 is used for scalable object storage on the cloud.
+Distributed Systems;What is AWS Lambda used for?;AWS Lambda allows running code without provisioning servers.
+Distributed Systems;What is Amazon RDS?;Amazon RDS is a managed database service for relational databases.
+Distributed Systems;What is AWS CloudFormation used for?;AWS CloudFormation is used for infrastructure as code.
+Distributed Systems;What is AWS Elastic Beanstalk?;AWS Elastic Beanstalk deploys and manages applications.
+Databases;What are the different types of NoSQL databases?;Document-based, Key-value, Wide Column, Graph databases.
+Databases;Name two popular NoSQL databases and their data models.;MongoDB (Document-based), Cassandra (Wide Column).
+Databases;Name a NoSQL database suitable for time-series data storage.;InfluxDB.
+Databases;What is the key-value data model in NoSQL databases?;Key-value databases store data as key-value pairs for fast retrieval.
+Databases;What is Amazon Glacier used for?;Amazon Glacier is used for data archiving and long-term backup.
+Databases;Name a NoSQL database that provides strong consistency.;MongoDB with replica sets configured for strong consistency.
+Databases;What is AWS DynamoDB used for?;AWS DynamoDB is a managed NoSQL database service.
+Databases;What AWS service is used for sending and receiving messages between different systems?;Amazon SQS.
+Cloud;What is the AWS Free Tier?;AWS Free Tier provides limited access to AWS services at no cost for 12 months.
+Cloud;What is an AWS Region?;An AWS Region is a geographical area with multiple Availability Zones.
+Cloud;What are AWS Availability Zones (AZs)?;AZs are independent data centers within an AWS Region.
+Cloud;What is Amazon VPC used for?;Amazon VPC is used to set up a virtual private cloud.
+Cloud;What is Amazon CloudFront used for?;Amazon CloudFront is used for content delivery through a CDN.
+Cloud;What is AWS IAM?;AWS IAM is used for managing user access and permissions.
+Cloud;What is the AWS Well-Architected Framework?;AWS Well-Architected Framework provides best practices for building applications on AWS.
+Cloud;What AWS service is used for logging and monitoring API calls?;AWS CloudTrail.
+Cloud;What is AWS EC2 Auto Scaling?;AWS EC2 Auto Scaling adjusts the number of EC2 instances based on demand.
+Cloud;What AWS service is used for centralized configuration management?;AWS Systems Manager Parameter Store.
+Cloud;What are the challenges of data skewness in distributed systems?;Data skewness can cause workload imbalances and performance bottlenecks.
+Cloud;How do you ensure fault tolerance in a distributed system?;Replicate data, use distributed consensus algorithms (Paxos/Raft), handle node failures.
+Cloud;What is the CAP theorem for distributed systems?;CAP theorem states that a distributed system can't achieve all three properties: Consistency, Availability, Partition Tolerance.
+Cloud;Explain the role of Apache ZooKeeper in distributed systems.;Apache ZooKeeper manages coordination and synchronization among distributed nodes.
+Cloud;What is AWS CloudFormation used for?;AWS CloudFormation provisions and manages AWS resources using templates.
+Cloud;What AWS service is used for serverless computing?;AWS Lambda.
+Cloud;What is Amazon EC2 used for?;Amazon Elastic Compute Cloud (EC2) provides scalable compute capacity in the cloud.
+Cloud;What is Amazon RDS used for?;Amazon Relational Database Service (RDS) provides managed relational databases.
+Cloud;What is Amazon S3 used for?;Amazon Simple Storage Service (S3) provides scalable object storage.
+Cloud;What is AWS IAM used for?;AWS Identity and Access Management (IAM) manages user access and permissions.
+Cloud;What is AWS CloudTrail used for?;AWS CloudTrail provides logging and monitoring of API calls.
+Cloud;What is Amazon VPC used for?;Amazon Virtual Private Cloud (VPC) provides a logically isolated network in AWS.
+Cloud;What is AWS Elastic Beanstalk used for?;AWS Elastic Beanstalk deploys and manages applications.
+Cloud;What is Amazon DynamoDB used for?;Amazon DynamoDB is a managed NoSQL database service.
+Cloud;What is AWS CloudFormation used for?;AWS CloudFormation provisions and manages AWS resources using templates.
+Cloud;What AWS service is used for serverless computing?;AWS Lambda allows running code without provisioning servers.
+Cloud;What is Amazon EC2 used for?;Amazon Elastic Compute Cloud (EC2) provides scalable compute capacity in the cloud.
+Cloud;What is Amazon RDS used for?;Amazon Relational Database Service (RDS) provides managed relational databases.
+Cloud;What is Amazon S3 used for?;Amazon Simple Storage Service (S3) provides scalable object storage.
+Cloud;What is AWS IAM used for?;AWS Identity and Access Management (IAM) manages user access and permissions.
+Cloud;What is AWS CloudTrail used for?;AWS CloudTrail provides logging and monitoring of API calls.
+Cloud;What is Amazon VPC used for?;Amazon Virtual Private Cloud (VPC) provides a logically isolated network in AWS.
+Cloud;What is AWS Elastic Beanstalk used for?;AWS Elastic Beanstalk deploys and manages applications.
+Cloud;What is Amazon DynamoDB used for?;Amazon DynamoDB is a managed NoSQL database service.
+Cloud;What is AWS CloudFormation used for?;AWS CloudFormation provisions and manages AWS resources using templates.
+Cloud;What AWS service is used for serverless computing?;AWS Lambda allows running code without provisioning servers.
+Cloud;What is Amazon EC2 used for?;Amazon Elastic Compute Cloud (EC2) provides scalable compute capacity in the cloud.
+Cloud;What is Amazon RDS used for?;Amazon Relational Database Service (RDS) provides managed relational databases.
+Cloud;What is Amazon S3 used for?;Amazon Simple Storage Service (S3) provides scalable object storage.
+Cloud;What is AWS IAM used for?;AWS Identity and Access Management (IAM) manages user access and permissions.
+Cloud;What is AWS CloudTrail used for?;AWS CloudTrail provides logging and monitoring of API calls.
+Cloud;What is Amazon VPC used for?;Amazon Virtual Private Cloud (VPC) provides a logically isolated network in AWS.
+Cloud;What is AWS Elastic Beanstalk used for?;AWS Elastic Beanstalk deploys and manages applications.
