@@ -1,0 +1,30 @@
+/* style.scss */
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// // Police for my title
+// .homenaje-title {
+//     font-family: "Homenaje", sans-serif;
+//   }
+
+// Card flipping 
+.card-container {
+    perspective: 1000px;
+}
+
+.card-flip {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card-flip.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    backface-visibility: hidden;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
