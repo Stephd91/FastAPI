@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anki Card app</title>
+    <!-- Add Bootstrap CSS link here (You can download Bootstrap or use a CDN) -->
+    <!-- Include Bootstrap CSS -->
+    <link href="{{ url_for('static', path='/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+
+<body>
+    <!-- Main Content - Flash Session -->
+    <div class="container mt-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for card, theme in card_themes %}
+            <div class="col card-container" data-theme="{{ theme.theme }}" style="display: block;">
+                <div class="flip-card card border-success mb-3 flip-container">
+                    <div class="card-front">
+                        <!-- Front side content -->
+                        <div class="card-header">{{ theme.theme }}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ card.question }}</h5>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <!-- Back side content -->
+                        <div class="card-header">
+                            Answer
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ card.answer }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Next and Previous Buttons -->
+    <div class="container mt-3">
+        <button class="btn btn-primary" id="prev-button">Previous</button>
+        <button class="btn btn-primary" id="next-button">Next</button>
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <!-- <script src="{{ url_for('static', path='/bootstrap.min.js') }}"></script> -->
+    <!-- Include Bootstrap JS bundle -->
+    <script src="{{ url_for('static', path='/bootstrap.bundle.min.js') }}"></script>
+    <!-- Include your custom JavaScript file -->
+    <script src="{{ url_for('static', path='/scripts.js') }}"></script>
+</body>
+
+</html>

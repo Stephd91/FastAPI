@@ -1,27 +1,35 @@
 # To avoid confusion between the SQLAlchemy models and the Pydantic models, we will have :
 # --> the file models.py with the SQLAlchemy models
 # --> the file schemas.py with the Pydantic models
-# These Pydantic models, such as Card and User, define a "schema" (a valid data shape)
-# Their role is to validate and ensure that the received data adheres to the specified structure and data types defined below ==> integrity and consistency of data
+#  Pydantic models, like Card and User, define a "schema" (valid data shape)
+# Their role is to validate and ensure that the received data adheres to the
+# specified structure and data types defined below ==> integrity and consistency of data
 # If the data doesn't match the requirements, Pydantic will raise validation errors.
 from pydantic import BaseModel
 from typing import Optional
 
-"""----------- Anki Cards -----------"""
 
-
-# For creating a basic Anki Card, which requires question, answer and its theme_id to categorize the card
+# ----------- Anki Cards -----------
+# For creating a basic Anki Card, which requires question and answer
 class CardBase(BaseModel):
+    """_summary_
+
+    Args:
+        BaseModel (_type_): initiate the pydantic model
+    """
+
     question: str
     answer: str
 
 
-# CardCreate hérite des attributs theme, question et answer de notre CardBase sans ajouter d'attributs supplémentaires
+# CardCreate hérite des attributs question et answer de notre CardBase
+# sans ajouter d'attributs supplémentaires
 class CardCreate(CardBase):
     pass
 
 
-# This class will create a complete Anki Card in our database (with its id that is required)
+# This class will create a complete Anki Card in our database
+# with all the required values
 class Card(CardBase):
     id: int
     theme_id: int
@@ -33,7 +41,7 @@ class Card(CardBase):
         orm_mode = True  # This is setting a config value, not declaring a type
 
 
-"""----------- Themes -----------"""
+# ----------- Themes -----------
 
 
 class ThemeBase(BaseModel):
@@ -47,7 +55,7 @@ class Theme(ThemeBase):
         orm_mode = True
 
 
-"""----------- Users -----------"""
+# ----------- Users -----------
 
 
 class UserBase(BaseModel):
@@ -68,7 +76,7 @@ class User(UserBase):
         orm_mode = True
 
 
-"""----------- Temporary session  -----------"""
+# ----------- Temporary session  -----------
 
 
 class TempBase(BaseModel):
@@ -86,9 +94,9 @@ class Temp(TempBase):
         orm_mode = True
 
 
-"""----------- Autres objets custom  -----------"""
+# ----------- Autres objets custom  -----------
 
 
-class CardTheme:
+class CardWithTheme(BaseModel):
     list_card: list[Card]
     list_theme: list[Theme]

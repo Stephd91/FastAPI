@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +8,23 @@
     <!-- Add Bootstrap CSS link here (You can download Bootstrap or use a CDN) -->
     <link href="{{ url_for('static', path='/bootstrap.min.css') }}" rel="stylesheet">
 </head>
+
 <body>
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="text-center">
             <h1 class="homenaje-title">Welcome to...</h1>
-                <img src="../static/images/Logo_Data_Engineering_101.png" alt="logo" class="img-fluid w-50 h-50">
+            <img src="../static/images/Logo_Data_Engineering_101.png" alt="logo" class="img-fluid w-50 h-50">
             <p class="text-muted">-</p>
-            <a href="{{ url_for('cards') }}" class="btn btn-primary btn-lg">Learn with flashcards</a>
+            <a href="{{ url_for('app') }}" class="btn btn-primary btn-lg">Learn with flashcards</a>
             <p class="text-muted">-</p>
             <figure class="text-center">
                 <blockquote class="blockquote">
                     <p>Education is the most powerful weapon which you can use to change the world.</p>
-                  </blockquote>
-                  <figcaption class="blockquote-footer">
+                </blockquote>
+                <figcaption class="blockquote-footer">
                     Nelson Mandela in <cite title="Long Walk to Freedom">Long Walk to Freedom</cite>
-                  </figcaption>
-              </figure>
+                </figcaption>
+            </figure>
         </div>
     </div>
     <!-- Include Bootstrap JS -->
@@ -31,4 +33,5 @@
     <!-- <script src="/static/scripts.js"></script> -->
 
 </body>
+
 </html>

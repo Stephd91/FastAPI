@@ -5,3 +5,5 @@ app/config_psycopg2.py
 app/config_sqlalchemy.py
 subprocess.py
 images
+.vscode
+app/static/bootstrap-icons

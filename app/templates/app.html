@@ -7,8 +7,9 @@
     <title>Anki Card app</title>
     <!-- Add Bootstrap CSS link here (You can download Bootstrap or use a CDN) -->
     <!-- Include Bootstrap CSS -->
-    <link href="{{ url_for('static', path='/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.scss">
+    <link rel="stylesheet" href="{{ url_for('static', path='/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/bootstrap-icons/font/bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
 </head>
 
 <body>
@@ -22,17 +23,27 @@
                 <!-- Add your navigation links here -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Create your own cards</a>
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-pencil-fill d-inline-block align-text-top"></i>
+                            Create your cards
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-person-square d-inline-block align-text-top"></i>
+                            Login
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  " href="#">Create user account</a>
+                        <a class="nav-link  " href="#">
+                            <i class="bi bi-person-fill-add d-inline-block align-text-top"></i>
+                            Create account
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="navbar-brand" href="#">
-                            <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Bootstrap" width="30" height="24">
+                        <a class="navbar-brand" href="/">Home
+                            <!-- <img src="../static/images/baby_yoda2.png" alt="baby_yoda2"
+                            class="logo img-fluid w-25 w-md-50"> -->
                         </a>
                     </li>
 
@@ -43,10 +54,12 @@
     </header>
 
     <!-- Functionalities Section -->
-    <div class="container mt-3 text-center">
+    <div class=" container mt-3 text-center">
         <!-- Flash Session Button -->
-        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#themeModal">Launch Flash
-            Session</button>
+        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#themeModal">
+            Launch <b>Flash Session</b>
+            <i class="bi bi-rocket-takeoff-fill"></i>
+        </button>
     </div>
 
     <!-- Theme Selection Modal -->
@@ -59,18 +72,14 @@
                 </div>
                 <div class="modal-body">
                     <!-- Replace 'Theme 1', 'Theme 2', ... with your actual theme names -->
-                    <div class="form-check">
+                    <!-- <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="Theme 1" id="theme1">
                         <label class="form-check-label" for="theme1">Theme 1</label>
-                    </div>
+                    </div> -->
+                    {% for theme_name in themes_names %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Theme 2" id="theme2">
-                        <label class="form-check-label" for="theme2">Theme 2</label>
-                    </div>
-                    {% for theme in themes %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{theme.id}}" id="theme2">
-                        <label class="form-check-label" for="theme2">{{ theme.theme }}</label>
+                        <input class="form-check-input" type="checkbox" value={{theme_name}} id={{theme_name}}>
+                        <label class="form-check-label" for="theme2">{{ theme_name }}</label>
                     </div>
                     {% endfor %}
                     <!-- Add more theme options as needed -->
@@ -78,31 +87,68 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                        onclick="launchFlashSession()">Start</button>
+                        onclick="startFlashSession()">Start</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal fade" id="flashSessionModal" tabindex="-1" aria-labelledby="flashSessionModalLabel"
+        aria-hidden="true">
+        <!-- ... Modal content ... -->
+    </div>
+
+    <!-- Store card themes data in a hidden element -->
+    <div id="cardThemesData" style="display: none;">
+        {% for card, theme in card_with_themes %}
+        <div class="card-theme" data-theme="{{ theme.theme }}" data-question="{{ card.question }}"
+            data-answer="{{ card.answer }}"></div>
+        {% endfor %}
+    </div>
 
     <!-- Main Content - Grid for Cards -->
+    <!-- 1st Div : Select Themes -->
     <div class="container mt-5">
-        <p>Watch all the cards here :</p>
+        <div class="container mt-3 text-center">
+            <p class="custom-paragraph">Select themes to watch correspondings cards</p>
+            {% for theme in themes %}
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" class="btn-check theme-checkbox" id="btncheck{{ loop.index }}"
+                    data-theme="{{ theme.theme }}" autocomplete="off">
+                <label class="btn btn-outline-primary" for="btncheck{{ loop.index }}">{{ theme.theme }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- 2nd Div : See Cards -->
+    <div class="container mt-5">
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for card, theme in card_themes %}
-            <div class="col">
-                <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
-                    <!-- <img src="..." class="card-img-top" alt="..."> -->
-                    <div class="card-header">{{ theme.theme }}</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Question</h5>
-                        <p class="card-text">{{ card.question }}</p>
+            {% for card, theme in card_with_themes %}
+            <div class="col card-container" data-theme="{{ theme.theme }}" style="display: block;">
+                <div class="flip-card card border-success mb-3 flip-container">
+                    <div class="card-front">
+                        <!-- Front side content -->
+                        <div class="card-header">{{ theme.theme }}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ card.question }}</h5>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <!-- Back side content -->
+                        <div class="card-header">
+                            Answer
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ card.answer }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
+
 
     <!-- Footer -->
     <footer class="bg-light py-2">
@@ -115,10 +161,12 @@
     <!-- Include Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="{{ url_for('static', path='/bootstrap.min.js') }}"></script>
+    <!-- <script src="{{ url_for('static', path='/bootstrap.min.js') }}"></script> -->
+    <!-- Include Bootstrap JS bundle -->
+    <script src="{{ url_for('static', path='/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Include your custom JavaScript file -->
-    <script src="/static/scripts.js"></script>
+    <script src="{{ url_for('static', path='/scripts.js') }}"></script>
 </body>
 
 </html>

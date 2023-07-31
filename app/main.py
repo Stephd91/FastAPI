@@ -1,5 +1,6 @@
 # STEP 1
 # import FastAPI : a Python class that provides all the functionality for your API.
+from pathlib import Path
 from fastapi import FastAPI, Depends, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import (
@@ -9,14 +10,18 @@ from fastapi.templating import Jinja2Templates  # for server-side rendering
 
 # Import for constructing our tables in the database and the schemas,
 # and interacting with them via crud operations
-import model, schema, crud
+import model
+import schema
+import crud
 from config_sqlalchemy import (
     engine,
     SessionLocal,
 )  # for connection to our learn_de database
 from sqlalchemy.orm import Session
 
-from pathlib import Path
+"""# For data quality checking
+import great_expectations as gx
+data_context = gx.get_context()"""
 
 # STEP 2
 # Connect to database and create the database tables defined in our model.py file
@@ -50,29 +55,60 @@ def get_db():
 
 # STEP 4
 # Create path operations = endpoints = routes
-# "Path" here refers to the last part of the URL starting from the first "/"
-# ex : In this URL https://example.com/items/foo the path is items/foo
-# While building an API, the "path" is the main way to separate "concerns" and "resources".
-# The @app.get("/") tells FastAPI that the function right below is in charge of handling requests that go to: the path "/" using a get operation
-"""@app.get("/") # This path operation decorator tells FastAPI that the function below corresponds to the path "/" with an operation get.
-async def root(): # Define the path operation function
-    test = input("What's your name ?")
-    return {"message": "Hello, "+ test +" !"}
-
-@app.get("/items/{item_number}") 
-async def read_item(item_number : int): # Declare the type of a path parameter in the function using standard Python type annotations
-    item_percent = item_number/100
-    return {"item": item_percent}"""
-
-
-# APP HOMEPAGE
+# APP HOMEPAGE endpoint
 @app.get("/")
 async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-# ANKI HOMEPAGE
-# Afficher jusqu'à 8 cartes -- TEST OK
+# ANKI HOMEPAGE endpoint "/app"
+# Afficher les cartes + les thèmes distincts -- TEST OK
+@app.get(
+    "/app/",
+    response_model=list[schema.CardWithTheme],
+    response_class=HTMLResponse,
+    name="app",
+)
+def read_cards_themes(
+    request: Request,
+    skip: int = 0,
+    card_limit: int = 1001,
+    theme_limit: int = 10,
+    db: Session = Depends(get_db),
+):
+    """_summary_
+
+    Args:
+        request (Request): _description_
+        skip (int, optional): _description_. Defaults to 0.
+        card_limit (int, optional): _description_. Defaults to 10.
+        theme_limit (int, optional): _description_. Defaults to 10.
+        db (Session, optional): sqlalchemy session
+
+    Returns:
+        _type_: _description_
+    """
+    # Fetch the list of cards
+    cards = crud.get_cards(db, skip=skip, limit=card_limit)
+    card_with_themes = [(card, card.theme_name) for card in cards]
+
+    # Fetch the list of themes
+    themes = crud.get_themes(db, limit=theme_limit)
+    print(themes[0].id)
+    # Fetch the list of distinct themes
+    themes_names = crud.get_themes_names(db, limit=theme_limit)
+    # context
+    context = {
+        "request": request,
+        "card_with_themes": card_with_themes,
+        "themes": themes,
+        "themes_names": themes_names,
+    }
+
+    return templates.TemplateResponse("app.html", context)
+
+
+# Afficher jusqu'à 10 cartes -- TEST OK
 @app.get(
     "/cards/",
     response_model=list[schema.Card],
@@ -82,47 +118,65 @@ async def read_index(request: Request):
 def read_cards(
     request: Request, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)
 ):
-    """_summary_
-
-    Args:
-        request (Request): _description_
-        skip (int, optional): _description_. Defaults to 0.
-        limit (int, optional): _description_. Defaults to 10.
-        db (Session, optional): _description_. Defaults to Depends(get_db).
-
-    Returns:
-        _type_: _description_
-    """
     cards = crud.get_cards(db, skip=skip, limit=limit)
     card_themes = [(card, card.theme_name) for card in cards]
+    print(card_themes[0][1].theme)
     return templates.TemplateResponse(
         "app.html", {"request": request, "card_themes": card_themes}
     )
 
 
-# Afficher les themes pour sélection par l'utilisateur lors d'une flash session -- TODOO !!!
-@app.get("/themes", response_model=list[schema.Theme], response_class=HTMLResponse)
-
-# Afficher une carte selon son ID -- TEST KO !!
-@app.get("/cards_html/{id}", response_model=schema.Card, response_class=HTMLResponse)
-async def read_cards_html(request: Request, id: int, db: Session = Depends(get_db)):
-    # Catch the card by its ID given in the route
-    card = db.query(model.Anki_cards).filter(model.Anki_cards.id == id).first()
-    return templates.TemplateResponse(
-        "app.html",
-        {
-            "request": request,
-            "theme": card.theme_id,
-            "question": card.question,
-            "answer": card.answer,
-        },
-    )
+# Afficher les thèmes à selectionner pour la flash session -- TEST OK
+# @app.get(
+#     "/themes",
+#     response_model=list[schema.Theme],
+#     response_class=HTMLResponse,
+#     name="themes",
+# )
+# def read_distinct_themes(
+#     request: Request, limit: int = 10, db: Session = Depends(get_db)
+# ):
+#     distinct_themes = crud.get_distinct_themes(db, limit=limit)
+#     return templates.TemplateResponse(
+#         "app.html", {"request": request, "distinct_themes": distinct_themes}
+#     )
 
 
-@app.post("/launch-flash-session/")
+# Afficher une carte selon son ID
+# @app.get("/cards/{id}", response_model=schema.Card, response_class=HTMLResponse)
+# async def read_cards_html(request: Request, id: int, db: Session = Depends(get_db)):
+#     # Catch the card by its ID given in the route
+#     card = db.query(model.Anki_cards).filter(model.Anki_cards.id == id).first()
+#     return templates.TemplateResponse(
+#         "app.html",
+#         {
+#             "request": request,
+#             "theme": card.theme_id,
+#             "question": card.question,
+#             "answer": card.answer,
+#         },
+#     )
+
+
+@app.post("/flash-session/")
 def launch_flash_session(selected_themes: list = Form(schema.Theme)):
     # Here, you can perform the logic to handle the selected themes for the flash session
     # For example, you can process the selected themes and generate the flash session content.
 
     # Return a response or redirect to the appropriate page after processing the selected themes
     return {"message": "Flash session launched successfully!"}
+
+
+@app.get("/flash-session/", response_class=HTMLResponse)
+def start_flash_session(request: Request, db: Session = Depends(get_db)):
+    # Fetch cards for the flash session
+    cards = crud.get_cards(
+        db, limit=10
+    )  # Assuming you want a maximum of 10 cards in the session
+
+    # Combine both sets of data into a single list of CardWithThemeResponse
+    card_themes = [(card, card.theme_name) for card in cards]
+
+    return templates.TemplateResponse(
+        "flash_session.html", {"request": request, "card_themes": card_themes}
+    )

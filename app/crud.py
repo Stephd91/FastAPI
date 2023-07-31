@@ -7,7 +7,7 @@ import model, schema
 # Goal of this script : create functions that are only dedicated to interacting with the database independent of path operation function
 # --> easily reuse them in multiple parts and also add unit tests for them
 
-"""----------- Anki Cards -----------"""
+# ----------- Anki Cards -----------
 
 
 # Read anki cards (max 30)
@@ -51,7 +51,19 @@ def modify_anki_card(
     return db_card_modif
 
 
-"""----------- Users -----------"""
+# ----------- Themes  -----------
+def get_themes(db: Session, limit: int = 30):
+    return db.query(model.Theme).distinct().limit(limit).all()
+
+
+def get_themes_names(db: Session, limit: int = 10):
+    distinct_themes = db.query(model.Theme.theme).distinct().limit(limit).all()
+    theme_names = [theme.theme for theme in distinct_themes]
+    print(theme_names)
+    return theme_names
+
+
+# ----------- Users -----------
 
 
 # Read a single user by its ID
@@ -77,7 +89,7 @@ def create_user(db: Session, user: schema.UserCreate):
     return db_user
 
 
-"""----------- Temporary session  -----------"""
+# ----------- Temporary session  -----------
 
 
 # Create a new session with x cards for a specified user and specified theme(s) by the user
