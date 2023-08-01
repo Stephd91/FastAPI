@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 import great_expectations as gx
 data_context = gx.get_context()"""
 
-# STEP 2
+# STEP 2.1
 # Connect to database and create the database tables defined in our model.py file
 # Normally you would probably initialize your database (create tables, etc) with Alembic
 model.Base.metadata.create_all(bind=engine)
