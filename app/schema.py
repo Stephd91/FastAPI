@@ -12,8 +12,7 @@ from typing import Optional
 # ----------- Anki Cards -----------
 # For creating a basic Anki Card, which requires question and answer
 class CardBase(BaseModel):
-    """_summary_
-
+    """Initiate a CardBase object
     Args:
         BaseModel (_type_): initiate the pydantic model
     """
@@ -42,8 +41,6 @@ class Card(CardBase):
 
 
 # ----------- Themes -----------
-
-
 class ThemeBase(BaseModel):
     theme: str
 
@@ -56,14 +53,12 @@ class Theme(ThemeBase):
 
 
 # ----------- Users -----------
-
-
 class UserBase(BaseModel):
-    username: str
+    email: str
 
 
 class UserCreate(UserBase):
-    email: str
+    username: str
     password: str
 
 
@@ -77,8 +72,6 @@ class User(UserBase):
 
 
 # ----------- Temporary session  -----------
-
-
 class TempBase(BaseModel):
     reader_id: int
     card_id: int
@@ -95,8 +88,6 @@ class Temp(TempBase):
 
 
 # ----------- Autres objets custom  -----------
-
-
-class CardWithTheme(BaseModel):
+"""class CardWithTheme(BaseModel):
     list_card: list[Card]
-    list_theme: list[Theme]
+    list_theme: list[Theme]"""

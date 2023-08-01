@@ -81,3 +81,23 @@ function filterCardsByTheme() {
 
 // Call the filterCardsByTheme function when the page loads
 window.addEventListener('DOMContentLoaded', filterCardsByTheme);
+
+
+
+// CURSOR DISPLAY (for the range of theme selection)
+const rangeInput = document.getElementById('customRange3');
+const rangeValueElement = document.getElementById('rangeValue');
+
+// Add an event listener to the range input to update the displayed value dynamically
+rangeInput.addEventListener('input', function () {
+    rangeValueElement.innerText = rangeInput.value + " Cards selected";
+});
+
+
+// SHOW SUCCESS MODAL --- TODO
+
+
+
+
+
+

@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 import great_expectations as gx
 data_context = gx.get_context()"""
 
-# STEP 2.1
+# STEP 2
 # Connect to database and create the database tables defined in our model.py file
 # Normally you would probably initialize your database (create tables, etc) with Alembic
 model.Base.metadata.create_all(bind=engine)
@@ -61,32 +61,33 @@ async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-# ANKI HOMEPAGE endpoint "/app"
+# --------------- ANKI HOMEPAGE endpoint "/app" ---------------
 # Afficher les cartes + les thèmes distincts -- TEST OK
 @app.get(
     "/app/",
-    response_model=list[schema.CardWithTheme],
+    response_model=list[schema.Card],
     response_class=HTMLResponse,
     name="app",
 )
 def read_cards_themes(
     request: Request,
     skip: int = 0,
-    card_limit: int = 1001,
+    card_limit: int = 100,
     theme_limit: int = 10,
     db: Session = Depends(get_db),
 ):
-    """_summary_
+    """Retrieve cards and their themes + the distinct theme names to
+    display on the main body of "app.html"
 
     Args:
         request (Request): _description_
         skip (int, optional): _description_. Defaults to 0.
-        card_limit (int, optional): _description_. Defaults to 10.
-        theme_limit (int, optional): _description_. Defaults to 10.
+        card_limit (int, optional): nb cards max displayed. Defaults to 100.
+        theme_limit (int, optional): nb theme max displayed. Defaults to 10.
         db (Session, optional): sqlalchemy session
 
     Returns:
-        _type_: _description_
+        _type_: app.html (Jinja2 template)
     """
     # Fetch the list of cards
     cards = crud.get_cards(db, skip=skip, limit=card_limit)
@@ -116,7 +117,10 @@ def read_cards_themes(
     name="cards",
 )
 def read_cards(
-    request: Request, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)
+    request: Request,
+    skip: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db),
 ):
     cards = crud.get_cards(db, skip=skip, limit=limit)
     card_themes = [(card, card.theme_name) for card in cards]
@@ -126,6 +130,118 @@ def read_cards(
     )
 
 
+# --------------- FLASH SESSION endpoint "/flash-session" ---------------
+@app.get(
+    "/flash-session/",
+    response_class=HTMLResponse,
+    response_model=schema.Temp,
+    name="flash-session",
+)
+def start_flash_session(request: Request, db: Session = Depends(get_db)):
+    # Fetch cards for the flash session
+    cards = crud.get_cards(
+        db, limit=10
+    )  # Assuming you want a maximum of 10 cards in the session
+
+    # Combine both sets of data into a single list of CardWithThemeResponse
+    card_themes = [(card, card.theme_name) for card in cards]
+
+    return templates.TemplateResponse(
+        "flash_session.html", {"request": request, "card_themes": card_themes}
+    )
+
+
+@app.post("/flash-session/", response_class=HTMLResponse, name="create_temp_session")
+def create_temp_session():
+    pass
+
+
+# --------------- USER CREATION endpoint "/signup" ---------------
+# Define a GET route for the sign-up page with csrf_token
+@app.get("/signup/", response_class=HTMLResponse, name="signup")
+def get_signup_page(request: Request):
+    csrf_token = request.cookies.get("csrf_token")
+    return templates.TemplateResponse(
+        "signup.html", {"request": request, "csrf_token": csrf_token}
+    )
+
+
+# Define a POST route to create a new user
+@app.post(
+    "/signup/",
+    response_class=HTMLResponse,
+    response_model=schema.UserCreate,
+    name="create_user",
+)
+def create_user(
+    request: Request,
+    username: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    csrf_token: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    user = schema.UserCreate(
+        username=username,
+        email=email,
+        password=password,
+    )
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    new_user = crud.create_user(db=db, user=user)
+    context = {"request": request, "new_user": new_user, "csrf_token": csrf_token}
+    return templates.TemplateResponse("signup.html", context)
+
+
+# --------------- CARD CREATION endpoint "/card-creation" ---------------
+# Define a GET route for the create card page
+@app.get(
+    "/create-card/",
+    response_class=HTMLResponse,
+    name="create-card",
+)
+def get_create_card(
+    request: Request,
+    theme_limit: int = 10,
+    db: Session = Depends(get_db),
+):
+    themes_names = crud.get_themes_names(db, limit=theme_limit)
+    context = {"request": request, "themes_names": themes_names}
+    return templates.TemplateResponse("create_card.html", context)
+
+
+# Define a POST route to create a new card
+@app.post(
+    "/create-card/",
+    response_class=HTMLResponse,
+    response_model=schema.Card,
+    name="create_card",
+)
+def create_card(
+    request: Request,
+    question: str = Form(...),
+    answer: str = Form(...),
+    theme_name: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    theme = crud.get_theme_by_theme_name(db, theme_name=theme_name)
+    creator_id = 1  # En attente de  création de la fonction AuthJWT
+    card = schema.CardCreate(
+        question=question,
+        answer=answer,
+    )
+    new_card = crud.create_anki_card(
+        db,
+        card=card,
+        user_id=creator_id,
+        theme_id=theme.id,
+    )
+    context = {"request": request, "new_card": new_card}
+    return templates.TemplateResponse("create_card.html", context)
+
+
+# ------------------ JUNK --------------------
 # Afficher les thèmes à selectionner pour la flash session -- TEST OK
 # @app.get(
 #     "/themes",
@@ -156,27 +272,3 @@ def read_cards(
 #             "answer": card.answer,
 #         },
 #     )
-
-
-@app.post("/flash-session/")
-def launch_flash_session(selected_themes: list = Form(schema.Theme)):
-    # Here, you can perform the logic to handle the selected themes for the flash session
-    # For example, you can process the selected themes and generate the flash session content.
-
-    # Return a response or redirect to the appropriate page after processing the selected themes
-    return {"message": "Flash session launched successfully!"}
-
-
-@app.get("/flash-session/", response_class=HTMLResponse)
-def start_flash_session(request: Request, db: Session = Depends(get_db)):
-    # Fetch cards for the flash session
-    cards = crud.get_cards(
-        db, limit=10
-    )  # Assuming you want a maximum of 10 cards in the session
-
-    # Combine both sets of data into a single list of CardWithThemeResponse
-    card_themes = [(card, card.theme_name) for card in cards]
-
-    return templates.TemplateResponse(
-        "flash_session.html", {"request": request, "card_themes": card_themes}
-    )

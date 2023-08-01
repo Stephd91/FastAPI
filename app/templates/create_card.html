@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <!-- Add Bootstrap CSS link here (You can download Bootstrap or use a CDN) -->
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/bootstrap-icons/font/bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+
+<body>
+    <!-- Create card Modal -->
+    <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
+        id="modalSheet">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header border-bottom-0">
+                    <i class="bi bi-pencil-fill "></i>
+                    <h1 class="modal-title fs-5">Create a new Flash Card</h1>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    <a href="{{ url_for('app') }}" class="btn-close" aria-label="Close"></a>
+                </div>
+                <div class="modal-body py-0">
+                    <p>Enter question, answer and theme of your card</p>
+                </div>
+
+                <div class="modal-body py-0">
+                    <form action="{{ url_for('create_card') }}" method="post">
+                        <div class="form-floating mb-3">
+                            <!-- <input type="text" class="form-control rounded-3" id="floatingTheme" name="theme"
+                                placeholder="Theme"> -->
+                            <select class="form-select rounded-3" id="floatingTheme" name="theme_name">
+                                <option value="" selected disabled>Select Theme</option>
+                                {% for theme_name in themes_names %}
+                                <option value="{{ theme_name }}">{{ theme_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingTheme">Theme</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="question" class="form-control rounded-3" id="floatingQuestion" name="question"
+                                placeholder="Question address">
+                            <label for="floating">Question</label>
+                            <!-- <textarea type="question" class="form-control rounded-3" id="floatingQuestion" rows="5"
+                                name="question" placeholder="Question"></textarea>
+                            <label for="floatingQuestion" class="form-label">Question</label> -->
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="answer" class="form-control rounded-3" id="floatingAnswer" name="answer"
+                                placeholder="Answer">
+                            <label for="floatingAnswer">Answer</label>
+                            <!-- <textarea type="answer" class="form-control rounded-3" id="floatingAnswer" rows="5"
+                                name="answer" placeholder="Answer"></textarea>
+                            <label for="floatingAnswer" class="form-label">Answer</label> -->
+                        </div>
+                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                            <button class="btn btn-lg btn-primary" type="submit">Save changes</button>
+                            <a href="{{ url_for('app') }}" class="btn btn-lg btn-secondary">Go to Homepage</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', path='/bootstrap.min.js') }}"></script>
+
+    <!-- Include your custom JavaScript file -->
+    <script src="{{ url_for('static', path='/scripts.js') }}"></script>
+
+    <!-- Include React and ReactDOM -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script> -->
+</body>
+
+</html>

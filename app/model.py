@@ -1,5 +1,5 @@
 # Import necessary sqlalchemy packages to create our tables
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, text
 from sqlalchemy.orm import relationship
 
 # Import our Base class declared in the config_alchemy.py thanks to the delclarative-base function
@@ -52,7 +52,15 @@ class Temp_session(Base):
     __tablename__ = "temp_session"
     # Create model attributes/columns for this table :
     id = Column(Integer, primary_key=True, index=True)
-    # uuid = Column(UUID)
+    uuid = Column(
+        String,
+        server_default=text(
+            "uuid_generate_v4()"
+        ),  # Generate a new UUID on the server-side
+        default=str(uuid4()),
+        unique=True,
+        nullable=False,
+    )
     reader_id = Column(Integer, ForeignKey("users.id"))
     card_id = Column(Integer, ForeignKey("anki_cards.id"))
 
