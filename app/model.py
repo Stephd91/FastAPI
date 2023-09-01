@@ -32,6 +32,7 @@ class Theme(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     theme = Column(String(256), nullable=False)
 
+    # One-to-Many relationship :
     cards = relationship("Anki_cards", back_populates="theme_name")
 
 
@@ -44,6 +45,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
 
+    # One-to-Many relationships :
     created_cards = relationship("Anki_cards", back_populates="creator_user")
     reading_cards = relationship("Temp_session", back_populates="reader")
 
@@ -51,16 +53,17 @@ class User(Base):
 class Temp_session(Base):
     __tablename__ = "temp_session"
     # Create model attributes/columns for this table :
-    id = Column(Integer, primary_key=True, index=True)
     uuid = Column(
         String,
+        primary_key=True,
+        index=True,
         server_default=text(
             "uuid_generate_v4()"
         ),  # Generate a new UUID on the server-side
-        default=str(uuid4()),
         unique=True,
         nullable=False,
     )
+    session_id = Column(Integer, nullable=False)
     reader_id = Column(Integer, ForeignKey("users.id"))
     card_id = Column(Integer, ForeignKey("anki_cards.id"))
 

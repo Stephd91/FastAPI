@@ -73,15 +73,21 @@ class User(UserBase):
 
 # ----------- Temporary session  -----------
 class TempBase(BaseModel):
+    session_id: int
     reader_id: int
-    card_id: int
+    card_id: int | None
+
+
+class TempCreate(TempBase):
+    pass
 
 
 class Temp(TempBase):
-    id: int
+    uuid: str
+    session_id: int
     cards: list[Card] = []
     reader: User
-    theme: list[Theme] = []
+    # themes: list[Theme] = []
 
     class Config:
         orm_mode = True

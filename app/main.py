@@ -131,29 +131,47 @@ def read_cards(
 
 
 # --------------- FLASH SESSION endpoint "/flash-session" ---------------
-@app.get(
+@app.post(
     "/flash-session/",
     response_class=HTMLResponse,
     response_model=schema.Temp,
-    name="flash-session",
+    name="start_flash_session",
 )
-def start_flash_session(request: Request, db: Session = Depends(get_db)):
-    # Fetch cards for the flash session
-    cards = crud.get_cards(
-        db, limit=10
-    )  # Assuming you want a maximum of 10 cards in the session
+def flash_session(
+    request: Request,
+    themes: list[str] = Form(...),
+    num_cards: int = Form(...),
+    db: Session = Depends(get_db),
+):
+    # Fetch the list of cards
+    flash_cards = crud.get_x_card_by_theme_list(db, themes, num_cards)
+    # Extract relevant card information for rendering
+    card_info = []
+    for card in flash_cards:
+        card_info.append(
+            {
+                "theme": card.theme_name.theme,
+                "question": card.question,
+                "answer": card.answer,
+            }
+        )
 
-    # Combine both sets of data into a single list of CardWithThemeResponse
-    card_themes = [(card, card.theme_name) for card in cards]
+    # based on the pydantic Temp object, that will fill the table "Temp_session"
+    # with the reader_id of the user and the card_id of each card restitued
+    # from the get_x_card_by_theme_list() function
+    # we need to iterate to create a new line in the Temp_session table for each card
+    reader_id = 1  # En attendant de terminer les fonctions liées aux users
+    session_id = crud.find_last_session_id(db=db)
+    for card in flash_cards:
+        temp_session = schema.TempCreate(
+            reader_id=reader_id, card_id=card.id, session_id=session_id
+        )
+        crud.create_temp_session(db=db, temp_session=temp_session)
 
-    return templates.TemplateResponse(
-        "flash_session.html", {"request": request, "card_themes": card_themes}
-    )
+    card_count = len(card_info)
 
-
-@app.post("/flash-session/", response_class=HTMLResponse, name="create_temp_session")
-def create_temp_session():
-    pass
+    context = {"request": request, "card_info": card_info, "card_count": card_count}
+    return templates.TemplateResponse("flash_session.html", context)
 
 
 # --------------- USER CREATION endpoint "/signup" ---------------
@@ -226,7 +244,7 @@ def create_card(
     db: Session = Depends(get_db),
 ):
     theme = crud.get_theme_by_theme_name(db, theme_name=theme_name)
-    creator_id = 1  # En attente de  création de la fonction AuthJWT
+    creator_id = 1  # En attente de création de la fonction AuthJWT
     card = schema.CardCreate(
         question=question,
         answer=answer,

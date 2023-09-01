@@ -15,12 +15,12 @@
     <!-- Main Content - Flash Session -->
     <div class="container mt-5">
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for card, theme in card_themes %}
-            <div class="col card-container" data-theme="{{ theme.theme }}" style="display: block;">
+            {% for card in card_info %}
+            <div class="col card-container" data-theme="{{ card.theme }}" style="display: block;">
                 <div class="flip-card card border-success mb-3 flip-container">
                     <div class="card-front">
                         <!-- Front side content -->
-                        <div class="card-header">{{ theme.theme }}</div>
+                        <div class="card-header">{{ card.theme }}</div>
                         <div class="card-body">
                             <h5 class="card-title">{{ card.question }}</h5>
                         </div>
@@ -37,13 +37,15 @@
                 </div>
             </div>
             {% endfor %}
+            <!-- Next and Previous Buttons -->
+            <div class="container mt-3">
+                <p>Number of cards in the session : {{ card_count }}</p>
+                <button class="btn btn-primary" id="prev-button">Previous</button>
+                <button class="btn btn-primary" id="next-button">Next</button>
+                <a href="{{ url_for('app') }}" class="btn btn-danger" role="button" aria-label="Close">End Flash
+                    Session</a>
+            </div>
         </div>
-    </div>
-
-    <!-- Next and Previous Buttons -->
-    <div class="container mt-3">
-        <button class="btn btn-primary" id="prev-button">Previous</button>
-        <button class="btn btn-primary" id="next-button">Next</button>
     </div>
 
     <!-- Include Bootstrap JS -->
@@ -53,7 +55,7 @@
     <!-- Include Bootstrap JS bundle -->
     <script src="{{ url_for('static', path='/bootstrap.bundle.min.js') }}"></script>
     <!-- Include your custom JavaScript file -->
-    <script src="{{ url_for('static', path='/scripts.js') }}"></script>
+    <script src="{{ url_for('static', path='/script_flash.js') }}"></script>
 </body>
 
 </html>

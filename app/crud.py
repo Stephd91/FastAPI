@@ -1,5 +1,6 @@
 # Import Session to declare the type of the db parameters and have better type checks and completion in functions
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 # Import sqlalchemy models + pydantic models
 import model, schema
@@ -17,6 +18,37 @@ def get_cards(db: Session, skip: int = 0, limit: int = 30):
 # Read anki cards themes name given their theme_id
 def get_card_by_theme_id(db: Session, theme_id: int):
     return db.query(model.Anki_cards).filter(model.Anki_cards.theme_id == theme_id)
+
+
+def get_x_card_by_theme_list(db: Session, themes: list, card_num: int):
+    # Get theme IDs based on theme names
+    theme_ids = db.query(model.Theme.id).filter(model.Theme.theme.in_(themes)).all()
+
+    # Calculate the number of cards per theme
+    cards_per_theme = card_num // len(theme_ids)
+    remaining_cards = card_num % len(theme_ids)
+
+    # Get cards from each theme
+    cards = []
+    for theme_id in theme_ids:
+        query = (
+            db.query(model.Anki_cards)
+            .filter(model.Anki_cards.theme_id == theme_id[0])
+            .order_by(func.random())
+        )
+
+        # Fetch the cards and add to the list
+        theme_cards = query.limit(cards_per_theme).all()
+        cards.extend(theme_cards)
+
+    # If there are remaining cards, fetch and add them
+    if remaining_cards > 0:
+        query = db.query(model.Anki_cards).filter(
+            model.Anki_cards.theme_id == theme_ids[0][0]
+        )
+        remaining_theme_cards = query.limit(remaining_cards).all()
+        cards.extend(remaining_theme_cards)
+    return cards
 
 
 # Create a new anki card. We could also use model.dump() to get the keywords
@@ -104,11 +136,23 @@ def create_user(db: Session, user: schema.UserCreate):
 
 
 # ----------- Temporary session  -----------
-# Create a new session with x cards for a specified user and specified theme(s) by the user
-def create_temp_session(db: Session, user_id: int, theme_id: list):
-    cards = get_cards()
-    return db.query(model.Temp_session).filter(
-        model.Temp_session.reader_id == user_id,
-        model.Temp_session.cards == cards,
-        db.query(model.Anki_cards).filter(model.Anki_cards.theme_id == theme_id),
+# Create a new line in temp_session with the reader_id and the card_id
+def create_temp_session(db: Session, temp_session: schema.TempCreate):
+    db_temp_session = model.Temp_session(
+        session_id=temp_session.session_id,
+        reader_id=temp_session.reader_id,
+        card_id=temp_session.card_id,
     )
+    db.add(db_temp_session)
+    db.commit()
+    db.refresh(db_temp_session)
+    return db_temp_session
+
+
+def find_last_session_id(db: Session):
+    # Find the largest session_id in the temp_session table
+    max_session_id = db.query(func.max(model.Temp_session.session_id)).scalar()
+
+    # Increment the largest session_id by 1 for the new entry
+    session_id = max_session_id + 1 if max_session_id is not None else 1
+    return session_id
