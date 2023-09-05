@@ -1,6 +1,6 @@
 # Import Session to declare the type of the db parameters and have better type checks and completion in functions
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, text
 
 # Import sqlalchemy models + pydantic models
 import model, schema
@@ -13,6 +13,12 @@ import model, schema
 # Read anki cards (max 30)
 def get_cards(db: Session, skip: int = 0, limit: int = 30):
     return db.query(model.Anki_cards).offset(skip).limit(limit).all()
+
+
+# Get an anki card by its id (trying to write this one with SQL for training)
+def get_card_by_id(db: Session, card_id: int):
+    query = text("SELECT * FROM Anki_Cards WHERE id = :card_id")
+    return db.execute(query, {"card_id": card_id}).fetchone()
 
 
 # Read anki cards themes name given their theme_id
@@ -66,24 +72,21 @@ def create_anki_card(db: Session, card: schema.CardCreate, user_id: int, theme_i
     return db_card
 
 
-# Modify an existing  anki card /// TO DO !!!
-def modify_anki_card(
-    db: Session, card: schema.Card, card_id: int, user_id: int, theme_id: int
-):
+# Modify an existing  anki card /// WIP ⚒️⚒️⚒️
+def modify_anki_card(db: Session, card_id: int, card: schema.CardUpdate):
     # find the anki_card with the specified card_id
-    db_card = db.query(model.Anki_cards).filter(model.Anki_cards.id == card_id)
-    if db_card is None:
-        raise ValueError(f"The Anki card with ID {card_id} does not exist.")
-    else:
-        db_card_modif = model.Anki_cards(
-            question=card.question,
-            answer=card.answer,
-            creator_id=user_id,
-            theme_id=theme_id,
-        )
+    card_to_modify = (
+        db.query(model.Anki_cards).filter(model.Anki_cards.id == card_id).first()
+    )
+
+    # Update the card's properties
+    card_to_modify.question = card.question
+    card_to_modify.answer = card.answer
+    card_to_modify.creator_id = card.creator_id
+
     db.commit()
-    db.refresh(db_card_modif)
-    return db_card_modif
+    db.refresh(card_to_modify)
+    return card_to_modify
 
 
 # Delete an existing  anki card /// TO DO !!!

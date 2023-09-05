@@ -27,6 +27,13 @@ class CardCreate(CardBase):
     pass
 
 
+class CardUpdate(CardBase):
+    creator_id: Optional[int]
+    # creator_id is optional for now ⚒️ waiting to implement user functions
+    theme_name: str
+    # PEUT-ON MIXER AVEC L'OBJET THEME ICI POUR MODIFIER LE THEME_NAME SI L'UTILISATEUR LE SOUHAITE ?
+
+
 # This class will create a complete Anki Card in our database
 # with all the required values
 class Card(CardBase):

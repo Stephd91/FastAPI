@@ -1,5 +1,5 @@
-# STEP 1
-# import FastAPI : a Python class that provides all the functionality for your API.
+# STEP 1 : Import FastAPI & librairies
+# FastAPI : a Python class that provides all the functionality for your API.
 from pathlib import Path
 from fastapi import FastAPI, Depends, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse
@@ -23,18 +23,17 @@ from sqlalchemy.orm import Session
 import great_expectations as gx
 data_context = gx.get_context()"""
 
-# STEP 2
-# Connect to database and create the database tables defined in our model.py file
-# Normally you would probably initialize your database (create tables, etc) with Alembic
+# STEP 2 : Connect to database
+# To create and interact with the database tables defined in our model.py file
+# Other possibility : initialize database (create tables, etc) with Alembic
 model.Base.metadata.create_all(bind=engine)
 
 # STEP 3
-# Create a FastAPI "instance" : the app variable will be an "instance" of the class FastAPI.
+# Create a FastAPI "instance" : the app variable will be an "instance" of the
+# class FastAPI.
 # This will be the main point of interaction to create all your API.
 # We also declare the templates to use for the server-side rendering with jinja
 app = FastAPI()
-# Mount the "static" directory to serve static files
-# app.mount("/static", StaticFiles(directory="static"), name="static")
 # Define the path to the "static" folder
 static_folder = Path(__file__).parent / "static"
 # Mount the "static" folder to serve static files
@@ -42,8 +41,10 @@ app.mount("/static", StaticFiles(directory=static_folder), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-# To open a SQLAlchemy session for each request, we need a dependency to have for each request an independent database session/connection (SessionLocal)
-# Our dependency will create a new SQLAlchemy SessionLocal that will be used in a single request, and then close it once the request is finished
+# To open a SQLAlchemy session for each request, we need a dependency to have
+# for each request an independent database session/connection (SessionLocal).
+# Our dependency will create a new SQLAlchemy SessionLocal that will be used
+# in a single request, and then close it once the request is finished
 # Then, a new session is created for the next request.
 def get_db():
     db = SessionLocal()
@@ -55,7 +56,7 @@ def get_db():
 
 # STEP 4
 # Create path operations = endpoints = routes
-# APP HOMEPAGE endpoint
+# --------------- ANKI LANDING PAGE endpoint "/" ---------------
 @app.get("/")
 async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -76,18 +77,22 @@ def read_cards_themes(
     theme_limit: int = 10,
     db: Session = Depends(get_db),
 ):
-    """Retrieve cards and their themes + the distinct theme names to
+    """
+    Retrieve cards and their themes + the distinct theme names to
     display on the main body of "app.html"
 
     Args:
-        request (Request): _description_
-        skip (int, optional): _description_. Defaults to 0.
-        card_limit (int, optional): nb cards max displayed. Defaults to 100.
-        theme_limit (int, optional): nb theme max displayed. Defaults to 10.
-        db (Session, optional): sqlalchemy session
+        ▪️request (Request): HTTP request object provided by FastAPI. \
+            It contains info about the incoming request (headers, cookies,...).
+        ▪️skip (int, optional): nb cards to skip in the query result\
+              (used for pagination). Defaults to 0.
+        ▪️card_limit (int, optional): nb cards max retrieved. Defaults to 100.
+        ▪️theme_limit (int, optional): nb theme max retrieved. Defaults to 10.
+        ▪️db (Session, optional): SQLAlchemy database session created by the\
+             `get_db` dependency to allow interaction with the database.
 
     Returns:
-        _type_: app.html (Jinja2 template)
+        ▪️HTML Response: app.html (Jinja2 template)
     """
     # Fetch the list of cards
     cards = crud.get_cards(db, skip=skip, limit=card_limit)
@@ -109,27 +114,6 @@ def read_cards_themes(
     return templates.TemplateResponse("app.html", context)
 
 
-# Afficher jusqu'à 10 cartes -- TEST OK
-@app.get(
-    "/cards/",
-    response_model=list[schema.Card],
-    response_class=HTMLResponse,
-    name="cards",
-)
-def read_cards(
-    request: Request,
-    skip: int = 0,
-    limit: int = 10,
-    db: Session = Depends(get_db),
-):
-    cards = crud.get_cards(db, skip=skip, limit=limit)
-    card_themes = [(card, card.theme_name) for card in cards]
-    print(card_themes[0][1].theme)
-    return templates.TemplateResponse(
-        "app.html", {"request": request, "card_themes": card_themes}
-    )
-
-
 # --------------- FLASH SESSION endpoint "/flash-session" ---------------
 @app.post(
     "/flash-session/",
@@ -143,6 +127,22 @@ def flash_session(
     num_cards: int = Form(...),
     db: Session = Depends(get_db),
 ):
+    """
+    Start a flash session with the specified themes and number of cards.
+
+    Args:
+        ▪️request (Request): HTTP request object provided by FastAPI.
+        ▪️themes (list[str], optional): A list of theme names selected by the \
+            user for the flash session.
+        ▪️num_cards (int, optional): The number of flash cards selected by the\
+            to be included in the session.
+        ▪️db (Session, optional): SQLAlchemy database session.
+
+    Returns:
+        ▪️HTML Response: flash_session.html (Jinja2 template)
+        ▪️schema.Temp: A new row in the Temp_session table will be inserted for
+          each card displayed to the user.
+    """
     # Fetch the list of cards
     flash_cards = crud.get_x_card_by_theme_list(db, themes, num_cards)
     # Extract relevant card information for rendering
@@ -160,7 +160,7 @@ def flash_session(
     # with the reader_id of the user and the card_id of each card restitued
     # from the get_x_card_by_theme_list() function
     # we need to iterate to create a new line in the Temp_session table for each card
-    reader_id = 1  # En attendant de terminer les fonctions liées aux users
+    reader_id = 1  # ⚒️En attendant de terminer les fonctions liées aux users
     session_id = crud.find_last_session_id(db=db)
     for card in flash_cards:
         temp_session = schema.TempCreate(
@@ -199,6 +199,23 @@ def create_user(
     csrf_token: str = Form(...),
     db: Session = Depends(get_db),
 ):
+    """WIP⚒️⚒️⚒️⚒️
+    _summary_
+
+    Args:
+        request (Request): _description_
+        username (str, optional): _description_. Defaults to Form(...).
+        email (str, optional): _description_. Defaults to Form(...).
+        password (str, optional): _description_. Defaults to Form(...).
+        csrf_token (str, optional): _description_. Defaults to Form(...).
+        db (Session, optional): _description_. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
     user = schema.UserCreate(
         username=username,
         email=email,
@@ -212,7 +229,7 @@ def create_user(
     return templates.TemplateResponse("signup.html", context)
 
 
-# --------------- CARD CREATION endpoint "/card-creation" ---------------
+# --------------- CARD CREATION endpoint "/create-card" ---------------
 # Define a GET route for the create card page
 @app.get(
     "/create-card/",
@@ -224,6 +241,17 @@ def get_create_card(
     theme_limit: int = 10,
     db: Session = Depends(get_db),
 ):
+    """WIP⚒️⚒️⚒️⚒️
+    _summary_
+
+    Args:
+        request (Request): HTTP request object provided by FastAPI.
+        theme_limit (int, optional): _description_. Defaults to 10.
+        db (Session, optional): SQLAlchemy database session.
+
+    Returns:
+        _type_: _description_
+    """
     themes_names = crud.get_themes_names(db, limit=theme_limit)
     context = {"request": request, "themes_names": themes_names}
     return templates.TemplateResponse("create_card.html", context)
@@ -243,6 +271,24 @@ def create_card(
     theme_name: str = Form(...),
     db: Session = Depends(get_db),
 ):
+    """
+    Create a new Anki card.
+
+    This route allows users to create a new Anki card by providing a question,
+    an answer, and a theme name. The flashcard is associated with the provided
+    theme and is attributed to the authenticated user.
+
+    Args:
+        request (Request): HTTP request object provided by FastAPI.
+        question (str, optional): question provided by user.
+        answer (str, optional): answer provided by user.
+        theme_name (str, optional): theme name provided by user.
+        db (Session, optional): SQLAlchemy database session.
+
+    Returns:
+        ▪️HTML Response: create_card.html (Jinja2 template)
+        ▪️schema.Card: The newly created Anki card inserted in the database.
+    """
     theme = crud.get_theme_by_theme_name(db, theme_name=theme_name)
     creator_id = 1  # En attente de création de la fonction AuthJWT
     card = schema.CardCreate(
@@ -259,6 +305,68 @@ def create_card(
     return templates.TemplateResponse("create_card.html", context)
 
 
+# --------------- CARD MODIFICATION endpoint "/modify-card" ---------------
+# Define a PUT route for the modif-card page
+@app.put(
+    "/modify-card/{card_id}",
+    # response_class=HTMLResponse,
+    response_model=schema.Card,
+    name="modify-card",
+)
+def modif_card(
+    # request: Request,
+    card_id: int,
+    card: schema.CardUpdate,
+    db: Session = Depends(get_db),
+):
+    """WIP⚒️⚒️⚒️⚒️
+    Modify an existing Anki card.
+
+    Args:
+        card_id (int): card_id provided by user in the API route.
+        card (schema.CardUpdate): _description_
+        db (Session, optional): _description_. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: _description_
+        ValueError: _description_
+        HTTPException: _description_
+
+    Returns:
+        _type_: _description_
+    """
+    # Ensure the card with the specified ID exists
+    existing_card = crud.get_card_by_id(db, card_id)
+    if existing_card is None:
+        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found")
+
+    # Retrieve the theme by name to get its ID
+    theme = crud.get_theme_by_theme_name(db, theme_name=card.theme_name)
+    if theme is None:
+        raise ValueError(f"The theme {card.theme_name} does not exist.")
+
+    modified_card = crud.modify_anki_card(db, card_id, card)
+    if modified_card is None:
+        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found")
+    return modified_card
+
+
+# --------------- CARD DELETION endpoint "/delete-card" ---------------
+# Define a DELETE route for the delete-card page
+@app.delete(
+    "/delete-card/",
+    # response_class=HTMLResponse,
+    name="delete-card",
+)
+def delete_card(
+    request: Request,
+    card_id: int,
+    db: Session = Depends(get_db),
+):
+    # WIP⚒️⚒️⚒️⚒️
+    return 1
+
+
 # ------------------ JUNK --------------------
 # Afficher les thèmes à selectionner pour la flash session -- TEST OK
 # @app.get(
@@ -273,6 +381,26 @@ def create_card(
 #     distinct_themes = crud.get_distinct_themes(db, limit=limit)
 #     return templates.TemplateResponse(
 #         "app.html", {"request": request, "distinct_themes": distinct_themes}
+#     )
+
+# Afficher jusqu'à 10 cartes -- TEST OK
+# @app.get(
+#     "/cards/",
+#     response_model=list[schema.Card],
+#     response_class=HTMLResponse,
+#     name="cards",
+# )
+# def read_cards(
+#     request: Request,
+#     skip: int = 0,
+#     limit: int = 10,
+#     db: Session = Depends(get_db),
+# ):
+#     cards = crud.get_cards(db, skip=skip, limit=limit)
+#     card_themes = [(card, card.theme_name) for card in cards]
+#     print(card_themes[0][1].theme)
+#     return templates.TemplateResponse(
+#         "app.html", {"request": request, "card_themes": card_themes}
 #     )
 
 
