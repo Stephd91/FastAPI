@@ -72,7 +72,7 @@ def create_anki_card(db: Session, card: schema.CardCreate, user_id: int, theme_i
     return db_card
 
 
-# Modify an existing  anki card /// WIP ⚒️⚒️⚒️
+# Modify an existing  anki card
 def modify_anki_card(db: Session, card_id: int, card: schema.CardUpdate):
     # find the anki_card with the specified card_id
     card_to_modify = (
@@ -89,9 +89,17 @@ def modify_anki_card(db: Session, card_id: int, card: schema.CardUpdate):
     return card_to_modify
 
 
-# Delete an existing  anki card /// TO DO !!!
-# def delete_anki_card():
-#     return
+# Delete an existing  anki card
+def delete_anki_card(db: Session, card_id: int):
+    card_to_delete = (
+        db.query(model.Anki_cards).filter(model.Anki_cards.id == card_id).first()
+    )
+    if card_to_delete:
+        db.delete(card_to_delete)
+        db.commit()
+        return card_to_delete
+    else:
+        return None
 
 
 # ----------- Themes  -----------

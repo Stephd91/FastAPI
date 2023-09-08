@@ -15,7 +15,7 @@ from uuid import UUID, uuid4
 class Anki_cards(Base):
     __tablename__ = "anki_cards"  # The __tablename__ attribute tells SQLAlchemy the name of the table to use in the database for each of these models
     # Create model attributes/columns for this table :
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     question = Column(String(256), nullable=False)
     answer = Column(String(256), nullable=False)
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=True)
@@ -53,7 +53,7 @@ class User(Base):
 class Temp_session(Base):
     __tablename__ = "temp_session"
     # Create model attributes/columns for this table :
-    uuid = Column(
+    id = Column(
         String,
         primary_key=True,
         index=True,

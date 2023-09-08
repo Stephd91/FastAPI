@@ -28,6 +28,7 @@ data_context = gx.get_context()"""
 # Other possibility : initialize database (create tables, etc) with Alembic
 model.Base.metadata.create_all(bind=engine)
 
+
 # STEP 3
 # Create a FastAPI "instance" : the app variable will be an "instance" of the
 # class FastAPI.
@@ -241,16 +242,16 @@ def get_create_card(
     theme_limit: int = 10,
     db: Session = Depends(get_db),
 ):
-    """WIP⚒️⚒️⚒️⚒️
-    _summary_
+    """
+    Displays the HTML page to create a card
 
     Args:
         request (Request): HTTP request object provided by FastAPI.
-        theme_limit (int, optional): _description_. Defaults to 10.
+        theme_limit (int, optional): Theme list displayed Defaults to 10.
         db (Session, optional): SQLAlchemy database session.
 
     Returns:
-        _type_: _description_
+        _type_: create_card.html (Jinja2 template)
     """
     themes_names = crud.get_themes_names(db, limit=theme_limit)
     context = {"request": request, "themes_names": themes_names}
@@ -272,7 +273,7 @@ def create_card(
     db: Session = Depends(get_db),
 ):
     """
-    Create a new Anki card.
+    Post function that creates a new Anki card.
 
     This route allows users to create a new Anki card by providing a question,
     an answer, and a theme name. The flashcard is associated with the provided
@@ -319,21 +320,19 @@ def modif_card(
     card: schema.CardUpdate,
     db: Session = Depends(get_db),
 ):
-    """WIP⚒️⚒️⚒️⚒️
+    """
     Modify an existing Anki card.
 
     Args:
         card_id (int): card_id provided by user in the API route.
-        card (schema.CardUpdate): _description_
-        db (Session, optional): _description_. Defaults to Depends(get_db).
+        card (schema.CardUpdate): card ORM object returned by the database
+        db (Session, optional): SQLAlchemy database session.
 
     Raises:
-        HTTPException: _description_
-        ValueError: _description_
-        HTTPException: _description_
+        HTTPException: If requested card is not found
+        ValueError: If Theme does not exist
 
-    Returns:
-        _type_: _description_
+    Returns: a modified card object
     """
     # Ensure the card with the specified ID exists
     existing_card = crud.get_card_by_id(db, card_id)
@@ -346,25 +345,38 @@ def modif_card(
         raise ValueError(f"The theme {card.theme_name} does not exist.")
 
     modified_card = crud.modify_anki_card(db, card_id, card)
-    if modified_card is None:
-        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found")
     return modified_card
 
 
 # --------------- CARD DELETION endpoint "/delete-card" ---------------
 # Define a DELETE route for the delete-card page
 @app.delete(
-    "/delete-card/",
+    "/delete-card/{card_id}",
     # response_class=HTMLResponse,
     name="delete-card",
 )
 def delete_card(
-    request: Request,
+    # request: Request,
     card_id: int,
     db: Session = Depends(get_db),
 ):
-    # WIP⚒️⚒️⚒️⚒️
-    return 1
+    """
+    Delete an existing Anki card.
+
+    Args:
+        card_id (int): card_id provided by user in the API route.
+        db (Session, optional): SQLAlchemy database session.
+
+    Raises:
+        HTTPException: If requested card is not found
+
+    Returns: a JSON message if successfully deleted the card
+    """
+    card_to_delete = crud.delete_anki_card(db=db, card_id=card_id)
+    if card_to_delete is None:
+        raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found")
+
+    return {"message": f"Card with ID {card_id} has been successfully deleted"}
 
 
 # ------------------ JUNK --------------------

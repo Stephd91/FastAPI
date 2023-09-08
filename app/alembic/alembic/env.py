@@ -1,9 +1,11 @@
 from logging.config import fileConfig
-
-from sqlalchemy import engine_from_config
+import sys
+from pathlib import Path
+from sqlalchemy import engine_from_config, pool, create_engine
 from sqlalchemy import pool
 
 from alembic import context
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -11,18 +13,16 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-'''if config.config_file_name is not None:
-    fileConfig(config.config_file_name)'''
+"""if config.config_file_name is not None:
+    fileConfig(config.config_file_name)"""
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# LINE EDITED to import our Base model :
-import sys
-from pathlib import Path
+
 # Add the path to the "app" directory to the Python path
 sys.path.append(str(Path(__file__).resolve().parents[2]))
+
+# add your model's MetaData object here for 'autogenerate' support
 from model import Base
+
 target_metadata = Base.metadata
 # target_metadata = None
 
@@ -30,6 +30,17 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+from decouple import config
+
+# Load environment variables
+DB_USER = config("DB_USER")
+DB_PASSWORD = config("DB_PASSWORD")
+DB_HOST = config("DB_HOST")
+DB_PORT = config("DB_PORT")
+DB_NAME = config("DB_NAME")
+
+# Define the SQLAlchemy URL
+sqlalchemy_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
 def run_migrations_offline() -> None:
@@ -44,13 +55,16 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
-    context.configure(
-        url=url,
-        target_metadata=target_metadata,
-        literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
-    )
+    url = sqlalchemy_url
+    context.configure(url=url, target_metadata=target_metadata, literal_binds=True)
+
+    # url = config.get_main_option("sqlalchemy.url")
+    # context.configure(
+    #     url=url,
+    #     target_metadata=target_metadata,
+    #     literal_binds=True,
+    #     dialect_opts={"paramstyle": "named"},
+    # )
 
     with context.begin_transaction():
         context.run_migrations()
@@ -63,16 +77,17 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    url = sqlalchemy_url
+    connectable = create_engine(url)
+
+    # connectable = engine_from_config(
+    #     config.get_section(config.config_ini_section, {}),
+    #     prefix="sqlalchemy.",
+    #     poolclass=pool.NullPool,
+    # )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
