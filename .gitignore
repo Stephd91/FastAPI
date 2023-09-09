@@ -3,7 +3,6 @@ __pycache__
 node_modules
 app/config_psycopg2.py
 subprocess.py
-images
 .vscode
 app/static/bootstrap-icons
 app/.env

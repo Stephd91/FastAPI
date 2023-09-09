@@ -19,9 +19,6 @@ from config_sqlalchemy import (
 )  # for connection to our learn_de database
 from sqlalchemy.orm import Session
 
-"""# For data quality checking
-import great_expectations as gx
-data_context = gx.get_context()"""
 
 # STEP 2 : Connect to database
 # To create and interact with the database tables defined in our model.py file
@@ -377,56 +374,3 @@ def delete_card(
         raise HTTPException(status_code=404, detail=f"Card with ID {card_id} not found")
 
     return {"message": f"Card with ID {card_id} has been successfully deleted"}
-
-
-# ------------------ JUNK --------------------
-# Afficher les thèmes à selectionner pour la flash session -- TEST OK
-# @app.get(
-#     "/themes",
-#     response_model=list[schema.Theme],
-#     response_class=HTMLResponse,
-#     name="themes",
-# )
-# def read_distinct_themes(
-#     request: Request, limit: int = 10, db: Session = Depends(get_db)
-# ):
-#     distinct_themes = crud.get_distinct_themes(db, limit=limit)
-#     return templates.TemplateResponse(
-#         "app.html", {"request": request, "distinct_themes": distinct_themes}
-#     )
-
-# Afficher jusqu'à 10 cartes -- TEST OK
-# @app.get(
-#     "/cards/",
-#     response_model=list[schema.Card],
-#     response_class=HTMLResponse,
-#     name="cards",
-# )
-# def read_cards(
-#     request: Request,
-#     skip: int = 0,
-#     limit: int = 10,
-#     db: Session = Depends(get_db),
-# ):
-#     cards = crud.get_cards(db, skip=skip, limit=limit)
-#     card_themes = [(card, card.theme_name) for card in cards]
-#     print(card_themes[0][1].theme)
-#     return templates.TemplateResponse(
-#         "app.html", {"request": request, "card_themes": card_themes}
-#     )
-
-
-# Afficher une carte selon son ID
-# @app.get("/cards/{id}", response_model=schema.Card, response_class=HTMLResponse)
-# async def read_cards_html(request: Request, id: int, db: Session = Depends(get_db)):
-#     # Catch the card by its ID given in the route
-#     card = db.query(model.Anki_cards).filter(model.Anki_cards.id == id).first()
-#     return templates.TemplateResponse(
-#         "app.html",
-#         {
-#             "request": request,
-#             "theme": card.theme_id,
-#             "question": card.question,
-#             "answer": card.answer,
-#         },
-#     )
