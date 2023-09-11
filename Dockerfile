@@ -21,6 +21,7 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 # be used for this or any following steps easily.)
 COPY ./app /code/app
 
+# The CMD directive specifies the default command to run when starting a container (docker run) from this image.
 # Set the command to run the uvicorn server.
 # This command will be run from the current working directory,
 # the same /code directory you set above with WORKDIR /code.
