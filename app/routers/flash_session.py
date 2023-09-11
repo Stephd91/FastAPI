@@ -3,12 +3,13 @@ from fastapi.responses import HTMLResponse
 
 from sqlalchemy.orm import Session
 
+# Server-side rendering
+from fastapi.templating import Jinja2Templates
+
 from app.dependencies import get_db
 from app.schemas.schema_temp_session import Temp, TempCreate
 from app.crud import crud_temp_session, crud_card
 
-# Server-side rendering
-from fastapi.templating import Jinja2Templates
 
 router = APIRouter(tags=["flash-session"], default_response_class=HTMLResponse)
 templates = Jinja2Templates(directory="app/templates")
@@ -59,7 +60,7 @@ def flash_session(
     # with the reader_id of the user and the card_id of each card restitued
     # from the get_x_card_by_theme_list() function
     # we need to iterate to create a new line in the Temp_session table for each card
-    reader_id = 1  # ⚒️En attendant de terminer les fonctions liées aux users
+    reader_id = 1  # ⚒️Waiting to handle users login in the app
     session_id = crud_temp_session.find_last_session_id(db=db)
     for card in flash_cards:
         temp_session = TempCreate(

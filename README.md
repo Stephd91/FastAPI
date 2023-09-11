@@ -1,9 +1,9 @@
 # A simple yet detailed FastAPI App project
 
-<img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%>
-This repository contains a FastAPI web application for training purpose 📚. \
-The app is composed of a FastAPI-SQLAlchemy-PostgreSQL backend combined with a server side render Jinja2. \
-Here is the project's schema architecture : \
+<img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%>\
+This repository contains a FastAPI web application for training purpose 📚.\
+The app is composed of a FastAPI-SQLAlchemy-PostgreSQL backend combined with a server side render Jinja2.\
+Here is the project's schema architecture :\
 ![Alt text](/project_architecture.png?raw=true "Project architecture")
 <!-- ![Schema Architecture](project_architecture.png) -->
 
@@ -46,9 +46,12 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
   127.0.0.1:80
   ```
 ## CI/CD Pipeline
-Automatically build and tag a Docker image and test it
+Automatically build and tag a Docker image and test it with GitHub Actions
+1. Go to your GitHub repo > Actions tab
+2. Select set up a workflow yourself. This takes you to a page for creating a new GitHub actions workflow file in your repository, under .github/workflows/main.yml by default.
+3. In the editor window, copy and paste the following YAML configuration :
   ```bash
-  ddd
+  To do
   ```
 
 ## API Reference
@@ -92,18 +95,18 @@ Render the homepage app.html from Jinja2 to navigate through cards and their ass
 Building this project from scratch, I could learn a lot about how API is built to exchange with its clients and its backend database.
 Here are the skills I learned from this project :
 * 📌 **Database skills**:
-  *✅ PostgreSQL handling with CLI
-  *✅ UML diagram and entity relationships in a relational database
-  *✅ Alembic migrations
+  * ✅ PostgreSQL handling with CLI
+  * ✅ UML diagram and entity relationships in a relational database
+  * ✅ Alembic migrations
 * 📌 **Python & API skills** :
-  *✅ SQLALchemy ORM language
-  *✅ Endpoint logic with FastAPI and crud operations
-  *✅ Pydantic model validation
-  *✅ Unit testing with pytest
+  * ✅ SQLALchemy ORM language
+  * ✅ Endpoint logic with FastAPI and crud operations
+  * ✅ Pydantic model validation
+  * ✅ Unit testing with pytest
 * 📌 **Front-end skills** :
-  *✅ Some Bootstrap, HTML and Javascript coding
+  * ✅ Some Bootstrap, HTML and Javascript coding
 * 📌 **Deployment skills** :
-  *✅ Used "decouple" package to hide connection infos with environment variables
-  *✅ Dockerization
-  *✅ CI/CD pipeline with GitHub Actions
+  * ✅ Used "decouple" package to hide connection infos with environment variables
+  * ✅ Dockerization
+  * ✅ CI/CD pipeline with GitHub Actions
 

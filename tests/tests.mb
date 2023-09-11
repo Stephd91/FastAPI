@@ -1,0 +1,6 @@
+1. Install pytest
+2. Create a directory "tests" at the root of your repository
+3. Add as many test.py files as needed then write the tests (see : https://fastapi.tiangolo.com/tutorial/testing/)
+4. In the files :
+- Use FastAPI's TestClient to simulate HTTP requests to your FastAPI app
+- Create functions with a name starting with test_ (this is standard pytest conventions)
