@@ -21,7 +21,7 @@ config = context.config
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 
 # add your model's MetaData object here for 'autogenerate' support
-from model import Base
+from app.db.config_sqlalchemy import Base
 
 target_metadata = Base.metadata
 # target_metadata = None

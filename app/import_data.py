@@ -1,5 +1,5 @@
-from config_sqlalchemy import engine, SessionLocal
-import model
+from app.db.config_sqlalchemy import engine, SessionLocal
+import app.models.model as model
 import pandas as pd
 
 # Step 1: Drop all the tables /!\
