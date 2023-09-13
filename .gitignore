@@ -4,5 +4,9 @@ node_modules
 app/config_psycopg2.py
 subprocess.py
 .vscode
+.ipynb_checkpoints
+.pytest_cache
 app/static/bootstrap-icons
 app/.env
+project_notes.ipynb
+db

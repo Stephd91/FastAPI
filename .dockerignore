@@ -1,1 +1,4 @@
 node_modules
+.ipynb_checkpoints
+.pytest_cache
+project_notes.ipynb

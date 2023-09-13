@@ -1,6 +1,6 @@
-from app.db.config_sqlalchemy import engine, SessionLocal
-import app.models.model as model
 import pandas as pd
+from app.models import model
+from app.config.config_sqlalchemy import engine, SessionLocal, Base
 
 # Step 1: Drop all the tables /!\
 # Use it wisely because all the values in the database will be deleted
@@ -8,7 +8,7 @@ import pandas as pd
 #    model.Base.metadata.drop_all(bind=engine)
 
 # Step 2: Recreate the tables with the correct schema
-model.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 # Step 3: Read the csv file using pandas
 df = pd.read_csv("../Anki_cards.csv", delimiter=";")

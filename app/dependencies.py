@@ -1,4 +1,4 @@
-from app.db.config_sqlalchemy import SessionLocal
+from .config.config_sqlalchemy import SessionLocal
 
 # Server-side rendering
 from fastapi.templating import Jinja2Templates

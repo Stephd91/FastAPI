@@ -1,5 +1,5 @@
 # Start from the official Python base image.
-FROM python:3.9
+FROM python:3.10
 
 # Set the current working directory to /code.
 # This is where we'll put the requirements.txt file and the app directory.
@@ -27,5 +27,6 @@ COPY ./app /code/app
 # the same /code directory you set above with WORKDIR /code.
 # Because the program will be started at /code and inside of it is the
 # directory ./app with your code, Uvicorn will be able to see and import app from app.main
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
 
+# Uncomment the below line if you want the webapp to be launched with uvicorn automatically
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

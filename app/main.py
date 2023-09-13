@@ -10,12 +10,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 # To connect to our learn_de database
-from .db.config_sqlalchemy import engine
+from app.config.config_sqlalchemy import engine
 
 # Import our submodules to construct our tables in the database, the schemas,
 # and interacting with them via crud operations
-from .models import model
-from .routers import homepage, flash_session, cards, users
+from app.models import model
+from app.routers import homepage, flash_session, cards, users
 
 
 # STEP 2 : Connect to database

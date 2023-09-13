@@ -3,11 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from decouple import config
 
-"""import subprocess
-# Exécutez la commande `sudo su - postgres`
-output = subprocess.call(["sudo", "su", "-","postgres"])"""
-
-# 2) Create a database URL for SQLAlchemy to connect to the PostgreSQL database ("postgresql://user:password@postgresserver/db")
+# 2) Create a database URL for SQLAlchemy to connect to the PostgreSQL database
+# ("postgresql://user:password@postgresserver/db").
 # Load environment variables from .env
 DB_USER = config("DB_USER")
 DB_PASSWORD = config("DB_PASSWORD")

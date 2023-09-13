@@ -2,9 +2,9 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, text
 from sqlalchemy.orm import relationship
 
-from app.db.config_sqlalchemy import Base
+from ..config.config_sqlalchemy import Base
 
-# from uuid import UUID, uuid4
+from sqlalchemy.dialects.postgresql import UUID
 
 
 class Anki_cards(Base):
@@ -49,12 +49,9 @@ class Temp_session(Base):
     __tablename__ = "temp_session"
     # Create model attributes/columns for this table :
     id = Column(
-        String,
+        UUID(as_uuid=True),
         primary_key=True,
         index=True,
-        server_default=text(
-            "uuid_generate_v4()"
-        ),  # Generate a new UUID on the server-side
         unique=True,
         nullable=False,
     )
