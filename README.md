@@ -41,8 +41,8 @@ Inside the .env, list the following environment variables that will be called by
 ```bash
 DB_USER=postgres
 DB_PASSWORD=yourpassword
-DB_HOST=db\
-DB_PORT=5432\
+DB_HOST=db
+DB_PORT=5432
 DB_NAME=learn_de
 ```
 ⚠️ A more secure mechanism is to use the secret support provided by your container orchestration framework. In most cases, these secrets are mounted as files in the running container. You'll see many apps also support env vars with a _FILE suffix to point to a file containing the variable.
@@ -71,6 +71,9 @@ The command *--network postgrenet* allow to create a network connection with Pos
   fastapiproject:v1.0.0
   ```
 
+3. Import data from Anki_cards.csv
+⚒️ TODO ⚒️
+
 **Option 2 : use Docker Compose to continue your local dev**\
 1. Open the *compose.yaml* file (placed at the root directory)
 2. Verify the ports for the server (should be 80:80) and for the database (should be 5432)
@@ -78,7 +81,7 @@ The command *--network postgrenet* allow to create a network connection with Pos
 
 ```bash
   mkdir db && cd db
-  echo "mypostgresqlpassword" > password.txt
+  echo "yourpassword" > password.txt
   docker compose up --build
 ```
 
@@ -88,6 +91,8 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
   ```bash
   127.0.0.1:80
   ```
+3. Import data from Anki_cards.csv
+⚒️ TODO ⚒️
 
 <hr>
 
