@@ -1,8 +1,8 @@
 # Learn the basics about APIs, RDBMS, Docker & more : a small webapp
 
 <img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%>\
-This repository contains a FastAPI web application for anyone who wants to learn about how to create an  and training  📚.\
-The app is composed of a **FastAPI - SQLAlchemy - PostgreSQL** backend combined with a server side rendering **Jinja2** and a simple web **Uvicorn** web server. The API is containerized with **Docker**.\
+This repository contains a FastAPI web application for anyone who wants to learn about how to create a REST API and training  📚.\
+The app is composed of a backend **FastAPI - SQLAlchemy - PostgreSQL** combined with a server side rendering **Jinja2** and a simple web server **Uvicorn**. The API is containerized with **Docker** and works with a PostgreSQL database which may also be ran in another Docker container with the help of **Docker Compose**.\
 Here is the project's schema architecture :\
 ![Alt text](/project_architecture.png?raw=true "Project architecture")
 <!-- ![Schema Architecture](project_architecture.png) -->
@@ -21,7 +21,7 @@ Here is the project's schema architecture :\
 
 Before you begin, ensure you have met the following requirements:
 
-- [Python](https://www.python.org/downloads/) (3.9 or higher)
+- [Python](https://www.python.org/downloads/) (3.10 or higher)
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [GitHub account](https://github.com/)
 
@@ -45,7 +45,8 @@ DB_HOST=db
 DB_PORT=5432
 DB_NAME=learn_de
 ```
-⚠️ A more secure mechanism is to use the secret support provided by your container orchestration framework. In most cases, these secrets are mounted as files in the running container. You'll see many apps also support env vars with a _FILE suffix to point to a file containing the variable.
+⚠️ A more secure mechanism than passing sensitive information via environment variables is to use [secrets in Docker Compose](https://docs.docker.com/compose/use-secrets/). In most cases, these secrets are mounted as files in the running container. Many apps also support env vars with a _FILE suffix to point to a file containing the variable.
+<blockquote>Docker Compose provides a way for you to use secrets without having to use environment variables to store information. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.</blockquote>
 
 **Option 1 : use 2 independants containers to see the web app running**\
 1. Run PostgreSQL in a container using the following docker run command.
@@ -54,7 +55,7 @@ DB_NAME=learn_de
   --mount type=volume,src=db-data,target=/var/lib/postgresql/data \
   -p 5432:5432 \ --network postgresnet \
   --name db \
-  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_PASSWORD=yourpassword \
   -e POSTGRES_DB=example\
   postgres 
   ```
@@ -97,6 +98,7 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
 <hr>
 
 ## Project structure
+<img src="/Project_structure.jpg" width=50% height=50%>\
 - app: Contains the main application code (main.py), handles dependencies and data import from a provided csv
 - app/routers: Defines the API routes.
 - app/models: Data models for Cards, Themes, Users, Flash session
