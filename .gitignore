@@ -10,3 +10,4 @@ app/static/bootstrap-icons
 app/.env
 project_notes.ipynb
 db
+.github/workflows/test.yml

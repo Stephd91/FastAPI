@@ -1,5 +1,5 @@
 # Learn the basics about APIs, RDBMS, Docker & more : a small webapp
-
+[![CI/CD Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/ci_cd.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/ci_cd.yml)
 <img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%>\
 This repository contains a FastAPI web application for anyone who wants to learn about how to create a REST API and training  📚.\
 The app is composed of a backend **FastAPI - SQLAlchemy - PostgreSQL** combined with a server side rendering **Jinja2** and a simple web server **Uvicorn**. The API is containerized with **Docker** and works with a PostgreSQL database which may also be ran in another Docker container with the help of **Docker Compose**.\
@@ -98,16 +98,20 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
 <hr>
 
 ## Project structure
-<img src="/Project_structure.jpg" width=50% height=50%>\
+<img src="/Project_structure.jpg" width=20% height=20%>
+
 - app: Contains the main application code (main.py), handles dependencies and data import from a provided csv
-- app/routers: Defines the API routes.
-- app/models: Data models for Cards, Themes, Users, Flash session
-- app/schemas: Pydantic validation models for Cards, Themes, Users, Flash session
+- app/alembic: Alembic migration scripts for database management
+- app/config: Database initialization and session management
 - app/crud: Contains the crud operations on each entity
-- app/config: Database initialization and session management.
-- app/templates: Jinja2 templates for front-end.
-- app/alembic: Alembic migration scripts for database management.
-- tests: Unit tests for your application.
+- app/models: Data models for Cards, Themes, Users, Flash session
+- app/nodes_modules: Bootstrap stuffs
+- app/routers: Defines the API routes.
+- app/schemas: Pydantic validation models for Cards, Themes, Users, Flash session
+- app/static: CSS and JS files for server-side rendering
+- app/templates: Jinja2 templates for front-end
+- db: Your database password to provide to Docker Compose  
+- tests: Unit tests for your application
 
 <hr>
 
@@ -128,9 +132,13 @@ Or you can use Docker Compose as explained in [Setup](#setup)
 
 ## CI/CD Pipeline
 Automatically build and tag a Docker image and test it with GitHub Actions
-1. Go to your GitHub repo > Actions tab
-2. Select set up a workflow yourself. This takes you to a page for creating a new GitHub actions workflow file in your repository, under .github/workflows/main.yml by default.
-3. In the editor window, copy and paste the following YAML configuration (you should have previously created a Docker [Personal Acces Token](https://docs.docker.com/docker-hub/access-tokens/)) :
+1. Go to your GitHub repo > Actions tab. Then select *set up a workflow yourself*. This takes you to a page for creating a new GitHub actions workflow file in your repository, under *.github/workflows/main.yml* by default.
+Or run the following command in your terminal :
+```bash
+mkdir -p .github/workflows
+cd .github/workflows
+```
+2. In the editor window, copy and paste the following YAML configuration (you should have previously created a Docker [Personal Acces Token](https://docs.docker.com/docker-hub/access-tokens/)) :
 
   ```bash
 name: CI/CD Pipeline
