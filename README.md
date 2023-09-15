@@ -1,5 +1,6 @@
 # Learn the basics about APIs, RDBMS, Docker & more : a small webapp
-[![CI/CD Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/ci_cd.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/ci_cd.yml)
+[![CI Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/ci.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/ci.yml)
+[![CI Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/cd.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/cd.yml)
 <img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%>\
 This repository contains a FastAPI web application for anyone who wants to learn about how to create a REST API and training  📚.\
 The app is composed of a backend **FastAPI - SQLAlchemy - PostgreSQL** combined with a server side rendering **Jinja2** and a simple web server **Uvicorn**. The API is containerized with **Docker** and works with a PostgreSQL database which may also be ran in another Docker container with the help of **Docker Compose**.\
