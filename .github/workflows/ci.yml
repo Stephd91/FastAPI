@@ -35,6 +35,7 @@ jobs:
         file: ./Dockerfile # Our API container is created using the dockerfile 
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapiproject:latest
+        # tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapiproject:${{ github.ref_name }}
 
   # deploy:
   #   needs: build

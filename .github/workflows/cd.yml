@@ -1,11 +1,12 @@
 name: CD Pipeline
 
 on:
+  workflow_dispatch:
   push:
     # tags:
     #   - '*'
-    branches:
-     - "main"
+    # branches:
+    #  - "main"
 # on:
 #   workflow_run:
 #     workflows: ["CI/CD Build"]
