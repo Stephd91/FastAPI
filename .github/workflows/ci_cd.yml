@@ -57,7 +57,7 @@ jobs:
         mkdir db
         cd db
         echo "yourpassword" > password.txt
-        cd app
+        cd ../app
         echo -e "DB_USER=postgres\nDB_PASSWORD=yourpassword\nDB_HOST=db\nDB_PORT=5432\nDB_NAME=learn_de" > .env
 
     - 
