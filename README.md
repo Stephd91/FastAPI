@@ -2,6 +2,9 @@
 [![CI Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/ci.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/ci.yml)
 [![CD Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/cd.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/cd.yml)
 <img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%>\
+<img src="./Screenshot_app.jpg" width=30% height=30%>\
+<img src="./Screenshot_flashsession.jpg" width=30% height=30%>\
+
 This repository contains a FastAPI web application for anyone who wants to learn about how to create a REST API and training  📚.\
 The app is composed of a backend **FastAPI - SQLAlchemy - PostgreSQL** combined with a server side rendering **Jinja2** and a simple web server **Uvicorn**. The API is containerized with **Docker** and works with a PostgreSQL database which may also be ran in another Docker container with the help of **Docker Compose**.\
 Here is the project's schema architecture :\
@@ -17,6 +20,7 @@ Here is the project's schema architecture :\
 - [CI/CD Pipeline](#cicd-pipeline)
 - [API Reference](#api-reference)
 - [Lessons learned](#lessons-learned)
+- [What's next ?](#whats-next)
 
 ## Prerequisites
 
@@ -52,13 +56,14 @@ DB_NAME=learn_de
 **Option 1 : use 2 independants containers to see the web app running**\
 1. Run PostgreSQL in a container using the following docker run command.
   ```bash
-  docker run --rm -d \
+  docker run --rm \
   --mount type=volume,src=db-data,target=/var/lib/postgresql/data \
-  -p 5432:5432 \ --network postgresnet \
+  -p 5432:5432 \
+  --network postgresnet \
   --name db \
-  -e POSTGRES_PASSWORD=yourpassword \
-  -e POSTGRES_DB=example\
-  postgres 
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=learn_de \
+  postgres
   ```
 
 2. Run the application in a container using the docker run command. 
@@ -240,3 +245,9 @@ Here are the skills I have learned from this project :
   * ✅ Dockerization and Docker Compose for multi containers app
   * ✅ CI/CD pipeline with GitHub Actions
 
+<hr>
+
+## What's next ?
+For the next steps in this project, these functionnalities could be developed:
+*Implement user authentication with JWT tokens to allow users to create, edit, and review their own cards.
+*Provide a fully automated pipeline to ingest data from external sources (ChatGPT, websites, ...)

@@ -24,6 +24,8 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 # to optimize the container image build times (bacause the Docker cache won't
 # be used for this or any following steps easily.)
 COPY ./app /code/app
+COPY ./bootstrap.sh /code/
+CMD ["bash", "./bootstrap.sh"]
 
 # The CMD directive specifies the default command to run when starting a container (docker run) from this image.
 # Set the command to run the uvicorn server.
@@ -33,4 +35,4 @@ COPY ./app /code/app
 # directory ./app with your code, Uvicorn will be able to see and import app from app.main
 
 # Uncomment the below line if you want the webapp to be launched with uvicorn automatically
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+#CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -2,9 +2,9 @@ name: Run tests
 run-name: ${{ github.workflow }}
 on:
   workflow_dispatch: # Manually running a workflow from the UI
-  push:
-    branches:
-    - "main"
+#   push:
+#     branches:
+#     - "main"
 
 permissions: # Setting permissions for the token
     contents: read
@@ -24,6 +24,8 @@ jobs:
             python -m pip install --upgrade pip
             pip install pytest
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # - name: Launch the api and database containers for test
+        #   run: 
         - name: Test with pytest
           run: |
                 pytest
