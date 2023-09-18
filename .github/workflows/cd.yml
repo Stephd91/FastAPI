@@ -28,7 +28,7 @@ jobs:
       run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapiproject:latest
 
     -
-      name: Checkout
+      name: Checkout # Cloning repository to the runner
       uses: actions/checkout@v4
     -
       name: Add databased credentials to allow api connection 
@@ -43,12 +43,12 @@ jobs:
       run: |
         echo -e "DB_USER=postgres\nDB_PASSWORD=yourpassword\nDB_HOST=db\nDB_PORT=5432\nDB_NAME=learn_de" > .env
     - 
-      name: Deploy to localhost with Docker Compose Action
+      name: Deploy with Docker Compose Action
       uses: isbang/compose-action@v1.5.1
       with:
         compose-file: "./compose.yaml"
     # -
-    #   name: Deploy to localhost with Docker Compose Action
+    #   name: Deploy with Docker Compose command line
     #   run: |
     #     docker-compose up -d
     # -

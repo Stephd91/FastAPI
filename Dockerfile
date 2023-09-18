@@ -1,6 +1,10 @@
 # Start from the official Python base image.
 FROM python:3.10
 
+# Metadata for Docker image
+LABEL org.opencontainers.image.source=https://github.com/Stephd91/FastAPI
+LABEL org.opencontainers.image.description="Fastapi container image"
+
 # Set the current working directory to /code.
 # This is where we'll put the requirements.txt file and the app directory.
 WORKDIR /code
