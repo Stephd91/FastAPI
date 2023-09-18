@@ -1,13 +1,12 @@
 name: CI Pipeline
 
 on:
+  workflow_dispatch: # Manually running a workflow from the UI
   push:
     tags:
       - '*'
-    # branches:
-    #  - "main"
-
-  workflow-dispatch:
+    branches:
+     - "main"
 
 jobs:
   # run-tests:

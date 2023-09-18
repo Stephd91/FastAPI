@@ -1,11 +1,10 @@
 name: Run tests
 
 on:
-    push:
-      branches:
-       - "main"
-    
-    workflow-dispatch: # Manually running a workflow from the UI
+  workflow_dispatch: # Manually running a workflow from the UI
+  push:
+    branches:
+    - "main"
 
 permissions: # Setting permissions for the token
     contents: read
