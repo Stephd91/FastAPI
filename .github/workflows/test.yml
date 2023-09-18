@@ -1,5 +1,5 @@
 name: Run tests
-
+run-name: ${{ github.workflow }}
 on:
   workflow_dispatch: # Manually running a workflow from the UI
   push:

@@ -1,5 +1,5 @@
 name: CD Pipeline
-
+run-name: ${{ github.workflow }}
 on:
   workflow_dispatch:
   push:
