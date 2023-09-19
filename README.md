@@ -129,14 +129,16 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
 <hr>
 
 ## CI/CD Pipeline
-Automatically build and tag a Docker image and test it with GitHub Actions
+The purpose of building this CI/CD pipeline is to automatically build a Docker image, push it to Docker Hub, pull it and then run it with Docker Compose.
+For this project, I have used GitHub Actions which freely provide runners to launch workflows.
+
 1. Go to your GitHub repo > Actions tab. Then select *set up a workflow yourself*. This takes you to a page for creating a new GitHub actions workflow file in your repository, under *.github/workflows/main.yml* by default.
 Or run the following command in your terminal :
 ```bash
 mkdir -p .github/workflows
 cd .github/workflows
 ```
-2. In the editor window, copy and paste the following config in a ci.yml file (you should have previously created a Docker [Personal Acces Token](https://docs.docker.com/docker-hub/access-tokens/)) :
+2. In the editor window, copy and paste the following config in a ci.yml file (you should have previously created a Docker [Personal Acces Token](https://docs.docker.com/docker-hub/access-tokens/) in your Docker Hub account) :
 
   ```bash
 name: CI Pipeline
@@ -170,7 +172,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/clockbox:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapiproject:latest
   ```
 3. Then you can create a cd.yml file :
 ```bash
