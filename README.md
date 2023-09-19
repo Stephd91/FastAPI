@@ -34,18 +34,18 @@ Before you begin, ensure you have met the following requirements:
 - [GitHub account](https://github.com/)
 
 ## Setup
-Clone the repository then go to the root directory :
+1. Clone the git repository then go to the root directory :
 
    ```bash
    git clone https://github.com/Stephd91/FastAPI.git
    cd FastAPI
    ```
-Create a .env file that will hold your database connection infos :
+2. Create a .env file that will hold your database connection infos :
    ```bash
    cd app
    touch .env
    ```
-Inside the .env, list the following environment variables that will be called by the *config/config_sqlalchemy.py* script :
+3. Inside the .env, list the following environment variables that will be called by the *config/config_sqlalchemy.py* script :
 ```bash
 DB_USER=postgres
 DB_PASSWORD=yourpassword
@@ -56,7 +56,15 @@ DB_NAME=learn_de
 🔒 A more secure mechanism than passing sensitive information via environment variables is to use [secrets in Docker Compose](https://docs.docker.com/compose/use-secrets/). In most cases, these secrets are mounted as files in the running container. Many apps also support env vars with a _FILE suffix to point to a file containing the variable.
 <blockquote>Docker Compose provides a way for you to use secrets without having to use environment variables to store information. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.</blockquote>
 
-**Option 1 : use 2 independants containers to see the web app running**\
+4. Build the API's Docker Image with the help of the Dockerfile to build a new image.
+
+  ```bash
+  docker build -t fastapiproject:v1.0.0 .
+  ```
+
+Now that the API is dockerized, there are 2 options to see the web app running on your localhost 🖥️: 
+
+**Option 1 : use 2 independants Docker containers**\
 1. Run PostgreSQL in a container using the following docker run command.
   ```bash
   docker run --rm \
@@ -64,7 +72,7 @@ DB_NAME=learn_de
   -p 5432:5432 \
   --network postgresnet \
   --name db \
-  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_PASSWORD=yourpassword \
   -e POSTGRES_DB=learn_de \
   postgres
   ```
@@ -80,9 +88,6 @@ The command *--network postgrenet* allow to create a network connection with Pos
   -e POSTGRES_PASSWORD=yourpassword \
   fastapiproject:v1.0.0
   ```
-
-3. Import data from Anki_cards.csv
-⚒️ TODO ⚒️
 
 **Option 2 : use Docker Compose to continue your local dev**\
 1. Open the *compose.yaml* file (placed at the root directory)
@@ -101,8 +106,6 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
   ```bash
   127.0.0.1:80
   ```
-3. Import data from Anki_cards.csv
-⚒️ TODO ⚒️
 
 <hr>
 
@@ -121,21 +124,6 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
    - app/templates: Jinja2 templates for front-end
 - db: Your database password to provide to Docker Compose  
 - tests: Unit tests for your application
-
-<hr>
-
-## Dockerization
-<!-- <img src="" /> -->
-After the changes you made to the app (new routes, new crud operations, ...), 
-you can build the Docker Image of your modified FastAPI. The docker build command uses the Dockerfile to build a new image.
-Then run the application in a Container using the docker run command. You can use a tag for your Docker image (eg. v1.1.0)
-
-  ```bash
-  docker build -t fastapiproject .
-  docker run -d --name fastapicontainer -p 80:80 fastapiproject:v1.1.0
-  ```
-
-Or you can use Docker Compose as explained in [Setup](#setup)
 
 <hr>
 
