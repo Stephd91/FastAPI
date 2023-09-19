@@ -32,14 +32,14 @@ jobs:
       name: Checkout # Cloning repository to the runner
       uses: actions/checkout@v4
     -
-      name: Add databased credentials to allow api connection 
+      name: Add databased credentials to allow API connection 
       working-directory: .
       run: |
         mkdir db
         cd db
         echo "yourpassword" > password.txt
     -
-      name: Add .env file for sqlalchemy connection
+      name: Add .env file for SQLalchemy connection
       working-directory: ./app
       run: |
         echo -e "DB_USER=postgres\nDB_PASSWORD=yourpassword\nDB_HOST=db\nDB_PORT=5432\nDB_NAME=learn_de" > .env

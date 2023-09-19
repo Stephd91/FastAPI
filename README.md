@@ -147,12 +147,13 @@ Or run the following command in your terminal :
 mkdir -p .github/workflows
 cd .github/workflows
 ```
-2. In the editor window, copy and paste the following YAML configuration (you should have previously created a Docker [Personal Acces Token](https://docs.docker.com/docker-hub/access-tokens/)) :
+2. In the editor window, copy and paste the following config in a ci.yml file (you should have previously created a Docker [Personal Acces Token](https://docs.docker.com/docker-hub/access-tokens/)) :
 
   ```bash
-name: CI/CD Pipeline
-
+name: CI Pipeline
+run-name: ${{ github.workflow }}
 on: 
+  workflow_dispatch: # Manually running a workflow from the UI
   push:
     tags:
       - '*'
@@ -182,7 +183,55 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/clockbox:latest
   ```
-4. Create a git tag and push to your GitHub repo :
+3. Then you can create a cd.yml file :
+```bash
+name: CD Pipeline
+run-name: ${{ github.workflow }}
+on:
+  workflow_dispatch: # Manually running a workflow from the UI  
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps: # Lets start our web app from the docker compose file 
+    -     
+      name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    -
+      name: Pull the latest image from Docker Hub
+      run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapiproject:latest
+
+    -
+      name: Checkout # Cloning repository to the runner
+      uses: actions/checkout@v4
+    -
+      name: Add databased credentials to allow API connection 
+      working-directory: .
+      run: |
+        mkdir db
+        cd db
+        echo "yourpassword" > password.txt
+    -
+      name: Add .env file for SQLalchemy connection
+      working-directory: ./app
+      run: |
+        echo -e "DB_USER=postgres\nDB_PASSWORD=yourpassword\nDB_HOST=db\nDB_PORT=5432\nDB_NAME=learn_de" > .env
+    - 
+      name: Deploy with Docker Compose Action
+      uses: isbang/compose-action@v1.5.1
+      with:
+        compose-file: "./compose.yaml"
+```
+
+4. Create a git tag and push to your GitHub repo. This will automatically run your CI/CD pipeline :
   ```bash
   git tag -a v1.0.0 -m "Release version 1.0.0"
   git push origin v1.0.0
