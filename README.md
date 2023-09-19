@@ -1,14 +1,17 @@
 # Learn the basics about APIs, RDBMS, Docker & more : a small webapp
 [![CI Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/ci.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/ci.yml)
 [![CD Pipeline](https://github.com/Stephd91/FastAPI/actions/workflows/cd.yml/badge.svg)](https://github.com/Stephd91/FastAPI/actions/workflows/cd.yml)
-<img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%>\
-<img src="./Screenshot_app.jpg" width=30% height=30%>\
-<img src="./Screenshot_flashsession.jpg" width=30% height=30%>\
+<p align="center"><img src="app/static/images/Logo_Data_Engineering_101.png" width=50% height=50%></p>
+<p align="center">
+   <img src="./Screenshot_app.jpg" width=40% height=40%>
+   <img src="./Screenshot_flashsession.jpg" width=40% height=40%>
+</p>
 
 This repository contains a FastAPI web application for anyone who wants to learn about how to create a REST API and training  📚.\
 The app is composed of a backend **FastAPI - SQLAlchemy - PostgreSQL** combined with a server side rendering **Jinja2** and a simple web server **Uvicorn**. The API is containerized with **Docker** and works with a PostgreSQL database which may also be ran in another Docker container with the help of **Docker Compose**.\
-Here is the project's schema architecture :\
-![Alt text](/project_architecture.png?raw=true "Project architecture")
+Here is the project's schema architecture :
+<p align="center"><img src="./project_architecture.png" width=70% height=70%></p>
+<!-- ![Alt text](/project_architecture.png?raw=true "Project architecture") -->
 <!-- ![Schema Architecture](project_architecture.png) -->
 
 ## Table of Contents
@@ -20,7 +23,7 @@ Here is the project's schema architecture :\
 - [CI/CD Pipeline](#cicd-pipeline)
 - [API Reference](#api-reference)
 - [Lessons learned](#lessons-learned)
-- [What's next ?](#whats-next)
+- [Next steps](#next-steps)
 
 ## Prerequisites
 
@@ -50,7 +53,7 @@ DB_HOST=db
 DB_PORT=5432
 DB_NAME=learn_de
 ```
-⚠️ A more secure mechanism than passing sensitive information via environment variables is to use [secrets in Docker Compose](https://docs.docker.com/compose/use-secrets/). In most cases, these secrets are mounted as files in the running container. Many apps also support env vars with a _FILE suffix to point to a file containing the variable.
+🔒 A more secure mechanism than passing sensitive information via environment variables is to use [secrets in Docker Compose](https://docs.docker.com/compose/use-secrets/). In most cases, these secrets are mounted as files in the running container. Many apps also support env vars with a _FILE suffix to point to a file containing the variable.
 <blockquote>Docker Compose provides a way for you to use secrets without having to use environment variables to store information. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.</blockquote>
 
 **Option 1 : use 2 independants containers to see the web app running**\
@@ -107,15 +110,15 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
 <img src="/Project_structure.jpg" width=20% height=20%>
 
 - app: Contains the main application code (main.py), handles dependencies and data import from a provided csv
-- app/alembic: Alembic migration scripts for database management
-- app/config: Database initialization and session management
-- app/crud: Contains the crud operations on each entity
-- app/models: Data models for Cards, Themes, Users, Flash session
-- app/nodes_modules: Bootstrap stuffs
-- app/routers: Defines the API routes.
-- app/schemas: Pydantic validation models for Cards, Themes, Users, Flash session
-- app/static: CSS and JS files for server-side rendering
-- app/templates: Jinja2 templates for front-end
+   - app/alembic: Alembic migration scripts for database management
+   - app/config: Database initialization and session management
+   - app/crud: Contains the crud operations on each entity
+   - app/models: Data models for Cards, Themes, Users, Flash session
+   - app/nodes_modules: Bootstrap stuffs
+   - app/routers: Defines the API routes
+   - app/schemas: Pydantic validation models for Cards, Themes, Users, Flash session
+   - app/static: CSS and JS files for server-side rendering
+   - app/templates: Jinja2 templates for front-end
 - db: Your database password to provide to Docker Compose  
 - tests: Unit tests for your application
 
@@ -247,7 +250,8 @@ Here are the skills I have learned from this project :
 
 <hr>
 
-## What's next ?
+## Next steps
 For the next steps in this project, these functionnalities could be developed:
-*Implement user authentication with JWT tokens to allow users to create, edit, and review their own cards.
-*Provide a fully automated pipeline to ingest data from external sources (ChatGPT, websites, ...)
+* Implement user authentication with JWT tokens to allow users to create, edit, and review their own cards
+* Provide a fully automated pipeline to ingest data from external sources (ChatGPT, websites, ...)
+* Use a NoSQL Database instead of PostgreSQL in order to provide images or GIFs in the cards
