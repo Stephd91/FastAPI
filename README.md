@@ -17,9 +17,8 @@ Here is the project's schema architecture :
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Setup](#setup)
 - [Project structure](#project-structure)
-- [Dockerization](#dockerization)
+- [Setup](#setup)
 - [CI/CD Pipeline](#cicd-pipeline)
 - [API Reference](#api-reference)
 - [Lessons learned](#lessons-learned)
@@ -32,6 +31,26 @@ Before you begin, ensure you have met the following requirements:
 - [Python](https://www.python.org/downloads/) (3.10 or higher)
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [GitHub account](https://github.com/)
+
+<hr>
+
+## Project structure
+<img src="/Project_structure.jpg" width=20% height=20%>
+
+- app: Contains the main application code (main.py), handles dependencies and data import from a provided csv
+   - app/alembic: Alembic migration scripts for database management
+   - app/config: Database initialization and session management
+   - app/crud: Contains the crud operations on each entity
+   - app/models: Data models for Cards, Themes, Users, Flash session
+   - app/nodes_modules: Bootstrap stuffs
+   - app/routers: Defines the API routes
+   - app/schemas: Pydantic validation models for Cards, Themes, Users, Flash session
+   - app/static: CSS and JS files for server-side rendering
+   - app/templates: Jinja2 templates for front-end
+- db: Your database password (inside password.txt) to provide to Docker Compose  
+- tests: Unit tests for your application
+
+<hr>
 
 ## Setup
 1. Clone the git repository then go to the root directory :
@@ -106,24 +125,6 @@ Automatic interactive documentation with Swagger UI (from the OpenAPI backend): 
   ```bash
   127.0.0.1:80
   ```
-
-<hr>
-
-## Project structure
-<img src="/Project_structure.jpg" width=20% height=20%>
-
-- app: Contains the main application code (main.py), handles dependencies and data import from a provided csv
-   - app/alembic: Alembic migration scripts for database management
-   - app/config: Database initialization and session management
-   - app/crud: Contains the crud operations on each entity
-   - app/models: Data models for Cards, Themes, Users, Flash session
-   - app/nodes_modules: Bootstrap stuffs
-   - app/routers: Defines the API routes
-   - app/schemas: Pydantic validation models for Cards, Themes, Users, Flash session
-   - app/static: CSS and JS files for server-side rendering
-   - app/templates: Jinja2 templates for front-end
-- db: Your database password to provide to Docker Compose  
-- tests: Unit tests for your application
 
 <hr>
 
