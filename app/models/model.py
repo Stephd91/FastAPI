@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from ..config.config_sqlalchemy import Base
 
+import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
 
@@ -49,11 +50,11 @@ class Temp_session(Base):
     __tablename__ = "temp_session"
     # Create model attributes/columns for this table :
     id = Column(
-        UUID(as_uuid=True),
+        String,
         primary_key=True,
         index=True,
         unique=True,
-        nullable=False,
+        default=str(uuid.uuid4()),
     )
     session_id = Column(Integer, nullable=False)
     reader_id = Column(Integer, ForeignKey("users.id"))

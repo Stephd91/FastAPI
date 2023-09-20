@@ -294,4 +294,5 @@ Here are the skills I have learned from this project :
 For the next steps in this project, these functionnalities could be developed:
 * Implement user authentication with JWT tokens to allow users to create, edit, and review their own cards
 * Provide a fully automated pipeline to ingest data from external sources (ChatGPT, websites, ...)
-* Use a NoSQL Database instead of PostgreSQL in order to provide images or GIFs in the cards
+* Use of a NoSQL Database instead of PostgreSQL in order to provide images or GIFs in the cards
+* Use of poetry package instead of requirements.txt

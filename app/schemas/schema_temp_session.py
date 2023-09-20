@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from .schema_card import Card
 from .schema_user import User
+from uuid import UUID
 
 
 # ----------- Temporary session  -----------
@@ -27,7 +28,7 @@ class Temp(TempBase):
     This class will create a complete Temporary session in our database with all the required values
     """
 
-    uuid: str
+    id: str
     session_id: int
     cards: list[Card] = []
     reader: User

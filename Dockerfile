@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 # to optimize the container image build times (bacause the Docker cache won't
 # be used for this or any following steps easily.)
 COPY ./app /code/app
-COPY ./bootstrap.sh /code/
+COPY ./bootstrap.sh ./import_data.py ./Anki_cards.csv /code/
 CMD ["bash", "./bootstrap.sh"]
 
 # The CMD directive specifies the default command to run when starting a container (docker run) from this image.
