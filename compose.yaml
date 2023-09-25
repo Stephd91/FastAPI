@@ -9,7 +9,6 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-
   # Server will run the equivalent command : docker run --rm  --network postgresnet --name rest-server -p 80:80 -e POSTGRES_PASSWORD=postgres fastapiproject
   # Note that the file doesn't specify a network for those 2 services.
   # Compose automatically creates a network and connects the services to it.
@@ -20,6 +19,8 @@ services:
       - 80:80
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    env_file:
+      - app/.env
     secrets:
       - db-password
 
@@ -46,7 +47,7 @@ services:
     expose:
       - 5432
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
