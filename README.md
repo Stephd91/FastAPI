@@ -47,7 +47,7 @@ Before you begin, ensure you have met the following requirements:
    - app/schemas: Pydantic validation models for Cards, Themes, Users, Flash session
    - app/static: CSS and JS files for server-side rendering
    - app/templates: Jinja2 templates for front-end
-- db: Your database password (inside password.txt) to provide to Docker Compose  
+- db: Your database password (inside password.txt) to provide to Docker Compose
 - tests: Unit tests for your application
 
 <hr>
@@ -66,11 +66,13 @@ Before you begin, ensure you have met the following requirements:
    ```
 3. Inside the .env, list the following environment variables that will be called by the *config/config_sqlalchemy.py* script :
 ```bash
+tee -a .env << END
 DB_USER=postgres
 DB_PASSWORD=yourpassword
 DB_HOST=db
 DB_PORT=5432
 DB_NAME=learn_de
+END
 ```
 🔒 A more secure mechanism than passing sensitive information via environment variables is to use [secrets in Docker Compose](https://docs.docker.com/compose/use-secrets/). In most cases, these secrets are mounted as files in the running container. Many apps also support env vars with a _FILE suffix to point to a file containing the variable.
 <blockquote>Docker Compose provides a way for you to use secrets without having to use environment variables to store information. If you’re injecting passwords and API keys as environment variables, you risk unintentional information exposure. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks.</blockquote>
@@ -81,7 +83,7 @@ DB_NAME=learn_de
   docker build -t fastapiproject:v1.0.0 .
   ```
 
-Now that the API is dockerized, there are 2 options to see the web app running on your localhost 🖥️: 
+Now that the API is dockerized, there are 2 options to see the web app running on your localhost 🖥️:
 
 **Option 1 : use 2 independants Docker containers**\
 1. Run PostgreSQL in a container using the following docker run command.
@@ -96,7 +98,7 @@ Now that the API is dockerized, there are 2 options to see the web app running o
   postgres
   ```
 
-2. Run the application in a container using the docker run command. 
+2. Run the application in a container using the docker run command.
 The command *--network postgrenet* allow to create a network connection with PostgreSQL
 
   ```bash
@@ -143,7 +145,7 @@ cd .github/workflows
   ```bash
 name: CI Pipeline
 run-name: ${{ github.workflow }}
-on: 
+on:
   workflow_dispatch: # Manually running a workflow from the UI
   push:
     tags:
@@ -179,7 +181,7 @@ jobs:
 name: CD Pipeline
 run-name: ${{ github.workflow }}
 on:
-  workflow_dispatch: # Manually running a workflow from the UI  
+  workflow_dispatch: # Manually running a workflow from the UI
   workflow_run:
     workflows: ["CI Pipeline"]
     types:
@@ -189,8 +191,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    steps: # Lets start our web app from the docker compose file 
-    -     
+    steps: # Lets start our web app from the docker compose file
+    -
       name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
@@ -204,7 +206,7 @@ jobs:
       name: Checkout # Cloning repository to the runner
       uses: actions/checkout@v4
     -
-      name: Add databased credentials to allow API connection 
+      name: Add databased credentials to allow API connection
       working-directory: .
       run: |
         mkdir db
@@ -215,7 +217,7 @@ jobs:
       working-directory: ./app
       run: |
         echo -e "DB_USER=postgres\nDB_PASSWORD=yourpassword\nDB_HOST=db\nDB_PORT=5432\nDB_NAME=learn_de" > .env
-    - 
+    -
       name: Deploy with Docker Compose Action
       uses: isbang/compose-action@v1.5.1
       with:
